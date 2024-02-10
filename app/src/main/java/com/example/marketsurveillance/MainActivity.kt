@@ -2,8 +2,6 @@ package com.example.marketsurveillance
 
 //相簿
 import android.app.Activity
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -55,6 +53,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(navController: NavHostController) {
     val activity = LocalContext.current as Activity
+    val googleDriveLauncher = GoogleDriveLauncher(activity)
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.background
@@ -82,10 +81,7 @@ fun MainScreen(navController: NavHostController) {
                     name = "拍照上傳雲端",
                     onClick = {
                         // 打開 Google Drive 應用程序
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://drive.google.com"))
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-
-                        activity.startActivity(intent)
+                        googleDriveLauncher.launchGoogleDriveWithPermissionCheck()
                     },
                     backgroundColor = Color(0xFFFFA500),
                     contentColor = Color.White,
