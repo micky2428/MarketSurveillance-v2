@@ -10,6 +10,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 
+
 class GoogleDriveLauncher(private val activity: Activity) {
 
     private val REQUEST_PERMISSION_CODE = 123 //请求权限的请求码，唯一識別碼
@@ -22,6 +23,7 @@ class GoogleDriveLauncher(private val activity: Activity) {
                 launchGoogleDrive()
             } else {
                 // 未授予相册权限，请求权限
+                showPermissionExplanationDialog()
                 requestPermission()
             }
         } else {
@@ -35,11 +37,22 @@ class GoogleDriveLauncher(private val activity: Activity) {
         return account != null
     }
 
+//原本
+//    private fun checkPermission(): Boolean {
+//        return ContextCompat.checkSelfPermission(
+//            activity,
+//            Manifest.permission.READ_EXTERNAL_STORAGE
+//        ) == PackageManager.PERMISSION_GRANTED
+//    }
+    //修改後
     private fun checkPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             activity,
             Manifest.permission.READ_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED
+        ) == PackageManager.PERMISSION_GRANTED || ActivityCompat.shouldShowRequestPermissionRationale(
+            activity,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        )
     }
 
     private fun requestPermission() {
@@ -59,18 +72,55 @@ class GoogleDriveLauncher(private val activity: Activity) {
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // 用户授予了相册权限，启动 Google Drive
                     launchGoogleDrive()
-                } else {
-                    // 用户拒绝了相册权限请求，你可以在这里处理
-                    showPermissionExplanationDialog()
+                    val dialog = AlertDialog.Builder(activity)
+                        .setTitle("应用未安装")
+                        .setMessage("您需要安装 Google Drive 才能使用此功能。")
+                        .setPositiveButton("安装") { dialog, _ ->
+                            // 打开 Google Play 商店的 Google Drive 应用页面
+                            val playStoreIntent = Intent(Intent.ACTION_VIEW)
+                            playStoreIntent.data = Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.apps.docs&hl=zh_TW&gl=US&pli=1")
+                            activity.startActivity(playStoreIntent)
+                            dialog.dismiss()
+                        }
+                        .setNegativeButton("取消") { dialog, _ ->
+                            // 用户取消安装，可以进行其他处理
+                            dialog.dismiss()
+                        }
+                        .create()
+                    dialog.show()
                 }
             }
         }
     }
 
+//    private fun launchGoogleDrive() {
+//        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://drive.google.com"))
+//        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//        activity.startActivity(intent)
+//    } //他說這是察看檔案，所以跳回主畫面，但又是隱藏啟動的方法之一
+//    private fun launchGoogleDrive() {
+//        val intent = Intent(Intent.ACTION_OPEN)
+//        intent.data = Uri.parse("https://drive.google.com")
+//        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//        activity.startActivity(intent)
+//    }
     private fun launchGoogleDrive() {
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://drive.google.com"))
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        activity.startActivity(intent)
+        val packageName = "com.google.android.apps.docs" // Google Drive 应用的包名
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.setPackage(packageName)
+        if (isPackageInstalled(packageName)) {
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            activity.startActivity(intent)
+        } else {
+            // 应用未安装，可以提示用户安装
+            // ...
+
+        }
+    }
+
+    private fun isPackageInstalled(packageName: String): Boolean {
+        val packageManager = activity.packageManager
+        return packageManager.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES) != null
     }
     private fun showPermissionExplanationDialog() {
         AlertDialog.Builder(activity)

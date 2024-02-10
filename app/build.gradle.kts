@@ -82,6 +82,7 @@ dependencies {
     //photoupload頁面
     implementation ("androidx.appcompat:appcompat:1.6.1")
     //google權限
+    implementation ("com.google.android.gms:play-services-auth:20.2.0")
 //    implementation ("com.google.api-client:google-api-client:1.32.1")
 //    implementation ("com.google.http-client:google-http-client-gson:1.39.2")
 //    implementation ("com.google.api-client:google-api-client-android:1.32.1")
