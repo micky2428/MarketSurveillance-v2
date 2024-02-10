@@ -1,21 +1,18 @@
 package com.example.marketsurveillance
 
-
-//import androidx.compose.foundation.layout.Spacer
-//import androidx.compose.ui.unit.dp
-//import android.widget.Toast
-//import androidx.compose.foundation.layout.Alignment
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +22,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.marketsurveillance.ui.theme.MarketSurveillanceTheme
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,41 +34,55 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MarketSurveillanceTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Column(modifier = Modifier.fillMaxSize()) {
-                        // 添加“市場檢查”按鈕
-                        GreetingButton(
-                            name = "市場檢查",
-                            onClick = {
-                                // 市場檢查按鈕點擊後的處理邏輯
-                                // 這裡可以加入您想要的操作
-                            },
-                            backgroundColor = Color.Yellow,
-                            contentColor = Color.White,
-                            modifier = Modifier.padding(all = 10.dp)
-                                .align(Alignment.CenterHorizontally),
-//                                .align(Alignment.CenterVertically),
-                            fontSize = 55.sp
-
-                        )
-
-                        // 添加“拍照上傳雲端”按鈕
-                        GreetingButton(
-                            name = "拍照上傳雲端",
-                            onClick = {
-                                // 拍照上傳雲端按鈕點擊後的處理邏輯
-                                // 這裡可以加入您想要的操作
-                            },
-                            backgroundColor = Color.Yellow,
-                            contentColor = Color.White,
-                            modifier = Modifier.padding(all = 10.dp)
-                                .align(Alignment.CenterHorizontally),
-//                                .align(Alignment.CenterVertically),
-                            fontSize = 55.sp
-                        )
+                val navController = rememberNavController()
+                NavHost(navController, startDestination = "main") {
+                    composable("main") {
+                        MainScreen(navController)
+                    }
+                    composable("ProductInfo") {
+                        MarketCheckScreen()
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun MainScreen(navController: NavHostController) {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colors.background
+    ) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Column(
+                modifier = Modifier.align(Alignment.Center),
+                verticalArrangement = Arrangement.Center
+            ) {
+                // 添加“市場檢查”按鈕
+                GreetingButton(
+                    name = "市場檢查",
+                    onClick = {
+                        // 导航到市场检查页面
+                        navController.navigate("ProductInfo")
+                    },
+                    backgroundColor = Color.Yellow,
+                    contentColor = Color.White,
+                    modifier = Modifier.padding(vertical = 10.dp),
+                    fontSize = 50.sp
+                )
+
+                // 添加“拍照上傳雲端”按鈕
+                GreetingButton(
+                    name = "拍照上傳雲端",
+                    onClick = {
+                        // 拍照上傳雲端按鈕點擊後的處理邏輯
+                    },
+                    backgroundColor = Color(0xFFFFA500),
+                    contentColor = Color.White,
+                    modifier = Modifier.padding(vertical = 10.dp),
+                    fontSize = 50.sp
+                )
             }
         }
     }
@@ -100,10 +115,22 @@ fun GreetingButton(
     }
 }
 
-//@Preview(showBackground = true)
 //@Composable
-//fun GreetingPreview() {
-//    MarketSurveillanceTheme {
-//        Greeting("Android")
+//fun MarketCheckScreen() {
+//    Surface(
+//        modifier = Modifier.fillMaxSize(),
+//        color = MaterialTheme.colors.background
+//    ) {
+//        Text(text = "請輸入商品資訊", fontSize = 30.sp)
 //    }
 //}
+
+@Composable
+fun MarketSurveillanceTheme(content: @Composable () -> Unit) {
+    MaterialTheme(
+        colors = MaterialTheme.colors,
+        typography = MaterialTheme.typography,
+        shapes = MaterialTheme.shapes,
+        content = content
+    )
+}
