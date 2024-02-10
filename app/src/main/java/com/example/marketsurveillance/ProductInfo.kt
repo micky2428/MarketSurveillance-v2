@@ -2,8 +2,10 @@ package com.example.marketsurveillance
 
 
 //import androidx.compose.material.Checkbox 因為不合格的還是用紙本，不用勾選
-
-
+//待更新功能:打了幾筆
+//直接選擇當日日期
+//資料儲存
+//相機偵測
 
 //設定日期
 //等調好日期選擇器的長相再用
@@ -22,8 +24,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.rememberDatePickerState
+
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,7 +37,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun MarketCheckScreen() {
     var productName by remember { mutableStateOf(TextFieldValue()) }
@@ -55,7 +56,6 @@ fun MarketCheckScreen() {
 
 //設定時間
 //    val dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-    val datePickerState = rememberDatePickerState()
     var specDate by remember { mutableStateOf(TextFieldValue()) }
 
 
@@ -89,7 +89,7 @@ fun MarketCheckScreen() {
 //                }
 //            )}
             // 人名選擇器
-            item {NamePicker()}
+            item { NamePicker() }
             //商品資訊
             item {TextField(
                 value = productName,

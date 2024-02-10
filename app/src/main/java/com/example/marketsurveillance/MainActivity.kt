@@ -1,5 +1,9 @@
 package com.example.marketsurveillance
 
+//相簿
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
@@ -26,7 +31,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,6 +54,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(navController: NavHostController) {
+    val activity = LocalContext.current as Activity
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.background
@@ -76,7 +81,11 @@ fun MainScreen(navController: NavHostController) {
                 GreetingButton(
                     name = "拍照上傳雲端",
                     onClick = {
-                        // 拍照上傳雲端按鈕點擊後的處理邏輯
+                        // 打開 Google Drive 應用程序
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://drive.google.com"))
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
+                        activity.startActivity(intent)
                     },
                     backgroundColor = Color(0xFFFFA500),
                     contentColor = Color.White,

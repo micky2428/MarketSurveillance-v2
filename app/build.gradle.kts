@@ -22,6 +22,7 @@ android {
         }
     }
 
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -62,23 +63,30 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3:1.2.0")
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.7")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    //productInfo頁面
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     implementation ("androidx.compose.foundation:foundation-layout:<version>")
     implementation ("androidx.compose.material:material:1.6.1")
     implementation ("androidx.navigation:navigation-compose:2.7.7")
-//    implementation ("org.threeten:threetenabp:1.5.3")
     coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.0.4")
     implementation ("androidx.compose.material3:material3:1.2.0")
     implementation ("androidx.compose.ui:ui:1.6.1")
     implementation ("androidx.compose.material3:material3:1.2.0")
-//    implementation ("androidx.compose.material3:material3-icons-core:1.2.0")
-//    implementation ("androidx.compose.material3:material3-icons-extended:1.2.0")
-
+    //photoupload頁面
+    implementation ("androidx.appcompat:appcompat:1.6.1")
+    //google權限
+//    implementation ("com.google.api-client:google-api-client:1.32.1")
+//    implementation ("com.google.http-client:google-http-client-gson:1.39.2")
+//    implementation ("com.google.api-client:google-api-client-android:1.32.1")
+////    implementation ("com.google.apis:google-api-services-drive:v3-rev305-1.32.1")
+//    implementation ("androidx.navigation:navigation-compose:2.7.7")
+//    implementation ("com.google.android.gms:play-services-drive:17.0.0")
 
 }
