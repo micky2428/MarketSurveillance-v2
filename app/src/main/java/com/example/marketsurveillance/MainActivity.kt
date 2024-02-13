@@ -1,7 +1,6 @@
 package com.example.marketsurveillance
 
 //相簿
-import android.app.Activity
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -19,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
@@ -52,8 +50,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun MainScreen(navController: NavHostController) {
-    val activity = LocalContext.current as Activity
-    val googleDriveLauncher = GoogleDriveLauncher(activity)
+//    val activity = LocalContext.current as Activity
+//    val googleDriveLauncher = GoogleDriveLauncher(activity)
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colors.background
@@ -70,7 +68,7 @@ fun MainScreen(navController: NavHostController) {
                         // 导航到市场检查页面
                         navController.navigate("ProductInfo")
                     },
-                    backgroundColor = Color.Yellow,
+                    backgroundColor = Color(0xFFFF7F50),
                     contentColor = Color.White,
                     modifier = Modifier.padding(vertical = 10.dp),
                     fontSize = 50.sp
@@ -81,7 +79,8 @@ fun MainScreen(navController: NavHostController) {
                     name = "拍照上傳雲端",
                     onClick = {
                         // 打開 Google Drive 應用程序
-                        googleDriveLauncher.launchGoogleDriveWithPermissionCheck()
+//                        googleDriveLauncher.launchGoogleDriveWithPermissionCheck()
+                         launchGoogleDriveWithPermissionCheck()
                     },
                     backgroundColor = Color(0xFFFFA500),
                     contentColor = Color.White,
