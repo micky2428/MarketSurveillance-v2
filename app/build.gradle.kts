@@ -95,7 +95,7 @@ dependencies {
     implementation ("com.google.api-client:google-api-client:1.31.0")
     implementation ("com.google.http-client:google-http-client-gson:1.42.3")
     implementation ("com.google.apis:google-api-services-docs:v1-rev20230929-2.0.0")
-    implementation ("com.google.auth:google-auth-library-oauth2:0.10.0")
+//    implementation ("com.google.auth:google-auth-library-oauth2:0.10.0")
     implementation ("com.google.guava:guava:24.1-jre")
     implementation("com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava")
     implementation("com.google.api-client:google-api-client-android:1.31.0")

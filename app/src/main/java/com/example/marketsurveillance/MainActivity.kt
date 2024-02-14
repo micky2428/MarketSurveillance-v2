@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
@@ -39,10 +41,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.Scope
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
+import com.google.api.client.googleapis.util.Utils
 import com.google.api.client.json.gson.GsonFactory
 import com.google.api.services.drive.Drive
 import com.google.api.services.drive.DriveScopes
 import java.util.Collections
+import com.google.api.client.extensions.android.json.AndroidJsonFactory
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,7 +103,7 @@ fun MainScreen(navController: NavHostController) {
                     onClick = {
                         // 打開 Google Drive 應用程序
 //                        googleDriveLauncher.launchGoogleDriveWithPermissionCheck()
-                            launchGoogleDriveWithPermissionCheck()
+                        HandleGoogleDriveLaunch()
 //                        startForResult.launch(getGoogleSignInClient(ctx).signInIntent)
                     },
                     backgroundColor = Color(0xFFFFA500),
@@ -157,110 +162,87 @@ fun MarketSurveillanceTheme(content: @Composable () -> Unit) {
         content = content
     )
 }
+//把photoupload內容移過來還是錯誤
+@Composable
+fun MyApp(content: @Composable () -> Unit) {
+    MaterialTheme {
+        Surface(modifier = Modifier.fillMaxSize()) {
+            content()
+        }
+    }
+}
 
-class launchGoogleDriveWithPermissionCheck : AppCompatActivity() {
+@Composable
+fun HandleGoogleDriveLaunch() {
+    launchGoogleDriveWithPermissionCheck()
+}
+@Composable
+fun launchGoogleDriveWithPermissionCheck() {
+    val context = LocalContext.current
+    val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        .requestEmail()
+        .requestScopes(
+            Scope(DriveScopes.DRIVE_FILE),
+            Scope(DriveScopes.DRIVE_APPDATA),
+            Scope(DriveScopes.DRIVE)
+        )
+        .build()
 
-    private lateinit var client: GoogleSignInClient
+    val client = GoogleSignIn.getClient(context, signInOptions)
+    val signInIntent = client.signInIntent
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MyApp {
-                requestSignIn()
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == ComponentActivity.RESULT_OK) {
+            val data = result.data
+            data?.let {
+                handleSignInIntent(it, context)
             }
         }
     }
+    launcher.launch(signInIntent)
+}
 
-    @Composable
-    fun MyApp(content: @Composable () -> Unit) {
-        MaterialTheme {
-            Surface(modifier = Modifier.fillMaxSize()) {
-                content()
-            }
+private fun handleSignInIntent(data: Intent, context: Context) {
+    GoogleSignIn.getSignedInAccountFromIntent(data)
+        .addOnSuccessListener { googleSignInAccount ->
+            val credential = GoogleAccountCredential
+                .usingOAuth2(context, Collections.singleton(DriveScopes.DRIVE_FILE))
+
+            credential.selectedAccount = googleSignInAccount.account
+
+            drive(context, credential)
+            val driveWebIntent =
+                Intent(Intent.ACTION_VIEW, Uri.parse("https://drive.google.com"))
+            context.startActivity(driveWebIntent)
         }
-    }
-
-    private fun requestSignIn() {
-        try {
-            val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .requestScopes(
-                    Scope(DriveScopes.DRIVE_FILE),
-                    Scope(DriveScopes.DRIVE_APPDATA),
-                    Scope(DriveScopes.DRIVE)
-                )
-                .build()
-
-            client =
-                GoogleSignIn.getClient(this@launchGoogleDriveWithPermissionCheck, signInOptions)
-            val signInIntent = client.signInIntent
-
-            val launcher =
-                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                    if (result.resultCode == RESULT_OK) {
-                        val data = result.data
-                        data?.let {
-                            handleSignInIntent(
-                                it,
-                                this@launchGoogleDriveWithPermissionCheck
-                            )
-                        } // Pass context
-                    }
-                }
-            launcher.launch(signInIntent)
-        } catch (e: Exception) {
-            // 在這裡處理異常
+        .addOnFailureListener { e ->
             e.printStackTrace()
-            Log.e("SignInError", "Error occurred during sign in: ${e.message}", e)
+            // 在這裡添加顯示錯誤消息的代碼，例如：
+            Toast.makeText(context, "Sign in failed: ${e.message}", Toast.LENGTH_SHORT).show()
         }
-    }
+}
 
+private fun drive(context: Context, credential: GoogleAccountCredential) {
+    try {
+        val googleDriveService = Drive.Builder(
+            AndroidHttp.newCompatibleTransport(),
+            GsonFactory(),
+            credential
+        )
+            .setApplicationName("MarketSurveillance")
+            .build()
 
-    private fun handleSignInIntent(data: Intent, context: Context) {
-        GoogleSignIn.getSignedInAccountFromIntent(data)
-            .addOnSuccessListener { googleSignInAccount ->
-                val credential = GoogleAccountCredential
-                    .usingOAuth2(context, Collections.singleton(DriveScopes.DRIVE_FILE))
-
-                credential.selectedAccount = googleSignInAccount.account
-
-                drive(context, credential)
-                val driveWebIntent =
-                    Intent(Intent.ACTION_VIEW, Uri.parse("https://drive.google.com"))
-                context.startActivity(driveWebIntent)
-            }
-            .addOnFailureListener { e ->
-                e.printStackTrace()
-                // 在這裡添加顯示錯誤消息的代碼，例如：
-                Toast.makeText(context, "Sign in failed: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-
-    private fun drive(context: Context, credential: GoogleAccountCredential) {
-        try {
-            val googleDriveService = Drive.Builder(
-                AndroidHttp.newCompatibleTransport(),
-                GsonFactory(),
-                credential
-            )
-                .setApplicationName("MarketSurveillance")
-                .build()
-
-            // 在這裡執行相應的操作，例如上傳、下載文件等
-            // googleDriveServiceFunction = GoogleDriveServiceFunction(context, googleDriveService)
-        } catch (e: Exception) {
-            // 在這裡處理異常
-            e.printStackTrace()
-            // 例如：顯示一條錯誤消息給用戶
-            Toast.makeText(
-                context,
-                "Error creating Drive service: ${e.message}",
-                Toast.LENGTH_SHORT
-            )
-                .show()
-        }
-
-
+        // 在這裡執行相應的操作，例如上傳、下載文件等
+        // googleDriveServiceFunction = GoogleDriveServiceFunction(context, googleDriveService)
+    } catch (e: Exception) {
+        // 在這裡處理異常
+        e.printStackTrace()
+        // 例如：顯示一條錯誤消息給用戶
+        Toast.makeText(
+            context,
+            "Error creating Drive service: ${e.message}",
+            Toast.LENGTH_SHORT
+        )
+            .show()
     }
 }
