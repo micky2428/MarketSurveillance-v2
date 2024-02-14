@@ -48,6 +48,7 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/{DEPENDENCIES}"
         }
     }
 }
@@ -83,32 +84,24 @@ dependencies {
     //photoupload頁面
     implementation ("androidx.appcompat:appcompat:1.6.1")
 //    //google權限
-//    implementation ("com.google.android.gms:play-services-auth:20.2.0")
-//    implementation ("com.google.api-client:google-api-client:1.32.1")
-//    implementation ("com.google.http-client:google-http-client-gson:1.39.2")
-//    implementation ("com.google.api-client:google-api-client-android:1.32.1")
-//    implementation ("com.google.apis:google-api-services-drive:v3-rev305-1.32.1")
-//    implementation ("androidx.navigation:navigation-compose:2.7.7")
-//    implementation ("com.google.android.gms:play-services-drive:17.0.0")
-//    implementation ("androidx.appcompat:appcompat:1.6.1")
-//    implementation ("androidx.core:core-ktx:1.12.0")
-//    implementation ("com.google.android.gms:play-services-auth:20.7.0")
-//    implementation ("com.google.api-client:google-api-client:2.2.0")
-//    implementation ("com.google.api-services:google-api-services-drive:v3-rev197-1.25.0")
+    implementation ("com.google.android.gms:play-services-auth:20.7.0")
+    implementation ("org.eclipse.jetty:jetty-server:11.0.6")
+    implementation ("com.google.oauth-client:google-oauth-client-java6:1.31.1")
+    implementation ("androidx.navigation:navigation-compose:2.7.7")
+    implementation ("com.google.android.gms:play-services-drive:17.0.0")
+
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0")
+
+    implementation ("com.google.api-client:google-api-client:1.31.0")
     implementation ("com.google.http-client:google-http-client-gson:1.42.3")
-//    implementation ("com.google.api-client:google-api-client-android:1.32.1")
-//    implementation ("androidx.navigation:navigation-compose:2.7.7")
-//    implementation ("com.google.android.gms:play-services-drive:17.0.0")
-//    implementation ("com.google.apis:google-api-services-docs:v1-rev20230929-2.0.0")
-//    implementation ("com.google.auth:google-auth-library-oauth2:0.10.0")
-//    implementation ("com.google.apis:google-api-services-drive:1.29.1")
-    // Guava
+    implementation ("com.google.apis:google-api-services-docs:v1-rev20230929-2.0.0")
+    implementation ("com.google.auth:google-auth-library-oauth2:0.10.0")
     implementation ("com.google.guava:guava:24.1-jre")
-// Guava fix
     implementation("com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava")
-//Drive
-    implementation("com.google.api-client:google-api-client-android:1.23.0")
+    implementation("com.google.api-client:google-api-client-android:1.31.0")
     implementation("com.google.apis:google-api-services-drive:v3-rev136-1.25.0")
     implementation("androidx.core:core-ktx:1.6.0")
+    implementation("com.android.volley:volley:1.2.1")
+
 
 }
