@@ -41,6 +41,7 @@ android {
     }
     buildFeatures {
         compose = true
+        viewBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -66,6 +67,9 @@ dependencies {
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.7")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("com.google.firebase:firebase-inappmessaging:20.4.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -95,7 +99,7 @@ dependencies {
     implementation ("com.google.api-client:google-api-client:1.31.0")
     implementation ("com.google.http-client:google-http-client-gson:1.42.3")
     implementation ("com.google.apis:google-api-services-docs:v1-rev20230929-2.0.0")
-//    implementation ("com.google.auth:google-auth-library-oauth2:0.10.0")
+    implementation ("com.google.oauth-client:google-oauth-client-jetty:1.34.1")
     implementation ("com.google.guava:guava:24.1-jre")
     implementation("com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava")
     implementation("com.google.api-client:google-api-client-android:1.31.0")
@@ -104,4 +108,16 @@ dependencies {
     implementation("com.android.volley:volley:1.2.1")
 
 
+//最新認證方式
+    implementation("androidx.credentials:credentials:1.3.0-alpha01")
+
+    // optional - needed for credentials support from play services, for devices running
+    // Android 13 and below.
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0-alpha01")
+//1130216
+    implementation ("com.fasterxml.jackson.core:jackson-core:2.12.5") // 根據您的需求選擇版本
+    implementation ("com.fasterxml.jackson.core:jackson-databind:2.12.5") // 根據您的需求選擇版本
+    implementation ("com.fasterxml.jackson.core:jackson-annotations:2.12.5")
 }
+
+
