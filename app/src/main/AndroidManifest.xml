@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.marketsurveillance">
+    xmlns:tools="http://schemas.android.com/tools">
+<!--    package="com.example.marketsurveillance">-->
 
+    <!--google drive權限-->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
+<!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
+
+    <!--相機權限-->
+    <!--can be a front camera or a back camera-->
+    <uses-feature android:name="android.hardware.camera.any"
+                    android:required="false" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+
 
 
     <application
@@ -20,11 +31,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MarketSurveillance"
         tools:targetApi="31">
+
+<!--        地圖<meta-data-->
+<!--            android:name="com.google.android.geo.API_KEY"-->
+<!--            android:value="YOUR_API_KEY" />-->
+<!--        <meta-data android:name="asset_statements"-->
+<!--            android:resource="@string/asset_statements" />-->
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.MarketSurveillance">
+            android:theme="@style/Theme.MarketSurveillance"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,0 +1,26 @@
+[
+  {
+    "relation" : [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target" : {
+      "namespace" : "android_app",
+      "package_name" : "com.example.marketsurveillance",
+      "sha256_cert_fingerprints" : [
+        SHA_HEX_VALUE
+      ]
+    }
+  }
+]
+
+<string name="asset_statements" translatable="false">
+[{
+  \"include\": \"https://signin.example.com/.well-known/assetlinks.json\"
+  }]
+</string>
+
+///relation 欄位是一或多個字串陣列，用來描述要宣告的關係。如要宣告應用程式和網站會共用登入憑證，請將關係指定為 delegate_permission/handle_all_urls 和 delegate_permission/common.get_login_creds。
+//
+//target 欄位是一種物件，用於指定宣告所適用的資產。下列欄位可用來識別網站
+//請在登入網域的以下位置代管 Digital Assets Link JSON 檔案
