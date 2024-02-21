@@ -1,329 +1,329 @@
-@file:OptIn(ExperimentalMaterial3Api::class)
+//@file:OptIn(ExperimentalMaterial3Api::class)
 package com.example.marketsurveillance
-
-//https://github.com/philipplackner/CameraXGuide/blob/taking-photos/app/src/androidTest/java/com/plcoding/cameraxguide/ExampleInstrumentedTest.kt
-import android.Manifest
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.Matrix
-import android.os.Bundle
-import android.util.Log
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.ImageCapture.OnImageCapturedCallback
-import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.ImageProxy
-import androidx.camera.view.CameraController
-import androidx.camera.view.LifecycleCameraController
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cameraswitch
-import androidx.compose.material.icons.filled.Photo
-import androidx.compose.material.icons.filled.PhotoCamera
-import androidx.compose.material3.BottomSheetScaffold
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.marketsurveillance.ui.theme.CameraXGuideTheme
-import kotlinx.coroutines.launch
-
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (!hasRequiredPermissions()) {
-            ActivityCompat.requestPermissions(
-                this, CAMERAX_PERMISSIONS, 0
-            )
-        }
-        setContent {
-            CameraXGuideTheme {
-                val scope = rememberCoroutineScope()
-                val scaffoldState = rememberBottomSheetScaffoldState()
-                val controller = remember {
-                    LifecycleCameraController(applicationContext).apply {
-                        setEnabledUseCases(
-                            CameraController.IMAGE_CAPTURE or
-                                    CameraController.VIDEO_CAPTURE
-                        )
-                    }
-                }
-                val viewModel = viewModel<MainViewModel>()
-                val bitmaps by viewModel.bitmaps.collectAsState()
-
-                BottomSheetScaffold(
-                    scaffoldState = scaffoldState,
-                    sheetPeekHeight = 0.dp,
-                    sheetContent = {
-                        PhotoBottomSheetContent(
-                            bitmaps = bitmaps,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        )
-                    }
-                ) { padding ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(padding)
-                    ) {
-                        CameraPreview(
-                            controller = controller,
-                            modifier = Modifier
-                                .fillMaxSize()
-                        )
-
-                        IconButton(
-                            onClick = {
-                                controller.cameraSelector =
-                                    if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
-                                        CameraSelector.DEFAULT_FRONT_CAMERA
-                                    } else CameraSelector.DEFAULT_BACK_CAMERA
-                            },
-                            modifier = Modifier
-                                .offset(16.dp, 16.dp)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Cameraswitch,
-                                contentDescription = "Switch camera"
-                            )
-                        }
-
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .align(Alignment.BottomCenter)
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceAround
-                        ) {
-                            IconButton(
-                                onClick = {
-                                    scope.launch {
-                                        scaffoldState.bottomSheetState.expand()
-                                    }
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.Photo,
-                                    contentDescription = "Open gallery"
-                                )
-                            }
-                            IconButton(
-                                onClick = {
-                                    takePhoto(
-                                        controller = controller,
-                                        onPhotoTaken = viewModel::onTakePhoto
-                                    )
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.PhotoCamera,
-                                    contentDescription = "Take photo"
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private fun takePhoto(
-        controller: LifecycleCameraController,
-        onPhotoTaken: (Bitmap) -> Unit
-    ) {
-        controller.takePicture(
-            ContextCompat.getMainExecutor(applicationContext),
-            object : OnImageCapturedCallback() {
-                override fun onCaptureSuccess(image: ImageProxy) {
-                    super.onCaptureSuccess(image)
-
-                    val matrix = Matrix().apply {
-                        postRotate(image.imageInfo.rotationDegrees.toFloat())
-                    }
-                    val rotatedBitmap = Bitmap.createBitmap(
-                        image.toBitmap(),
-                        0,
-                        0,
-                        image.width,
-                        image.height,
-                        matrix,
-                        true
-                    )
-
-                    onPhotoTaken(rotatedBitmap)
-                }
-
-                override fun onError(exception: ImageCaptureException) {
-                    super.onError(exception)
-                    Log.e("Camera", "Couldn't take photo: ", exception)
-                }
-            }
-        )
-    }
-
-    private fun hasRequiredPermissions(): Boolean {
-        return CAMERAX_PERMISSIONS.all {
-            ContextCompat.checkSelfPermission(
-                applicationContext,
-                it
-            ) == PackageManager.PERMISSION_GRANTED
-        }
-    }
-
-    companion object {
-        private val CAMERAX_PERMISSIONS = arrayOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.RECORD_AUDIO,
-        )
-    }
-}
-
-
-
-
-//20240215 有按鍵畫面
+//
+////https://github.com/philipplackner/CameraXGuide/blob/taking-photos/app/src/androidTest/java/com/plcoding/cameraxguide/ExampleInstrumentedTest.kt
+//import android.Manifest
+//import android.content.pm.PackageManager
+//import android.graphics.Bitmap
+//import android.graphics.Matrix
 //import android.os.Bundle
+//import android.util.Log
 //import androidx.activity.ComponentActivity
 //import androidx.activity.compose.setContent
+//import androidx.camera.core.CameraSelector
+//import androidx.camera.core.ImageCapture.OnImageCapturedCallback
+//import androidx.camera.core.ImageCaptureException
+//import androidx.camera.core.ImageProxy
+//import androidx.camera.view.CameraController
+//import androidx.camera.view.LifecycleCameraController
 //import androidx.compose.foundation.layout.Arrangement
 //import androidx.compose.foundation.layout.Box
-//import androidx.compose.foundation.layout.Column
+//import androidx.compose.foundation.layout.Row
 //import androidx.compose.foundation.layout.fillMaxSize
+//import androidx.compose.foundation.layout.fillMaxWidth
+//import androidx.compose.foundation.layout.offset
 //import androidx.compose.foundation.layout.padding
-//import androidx.compose.material.Button
-//import androidx.compose.material.ButtonDefaults
-//import androidx.compose.material.MaterialTheme
-//import androidx.compose.material.Surface
-//import androidx.compose.material.Text
-//import androidx.compose.runtime.Composable
+//import androidx.compose.material.icons.Icons
+//import androidx.compose.material.icons.filled.Cameraswitch
+//import androidx.compose.material.icons.filled.Photo
+//import androidx.compose.material.icons.filled.PhotoCamera
+//import androidx.compose.material3.BottomSheetScaffold
+//import androidx.compose.material3.ExperimentalMaterial3Api
+//import androidx.compose.material3.Icon
+//import androidx.compose.material3.IconButton
+//import androidx.compose.material3.rememberBottomSheetScaffoldState
+//import androidx.compose.runtime.collectAsState
+//import androidx.compose.runtime.getValue
+//import androidx.compose.runtime.remember
+//import androidx.compose.runtime.rememberCoroutineScope
 //import androidx.compose.ui.Alignment
 //import androidx.compose.ui.Modifier
-//import androidx.compose.ui.graphics.Color
-//import androidx.compose.ui.text.TextStyle
-//import androidx.compose.ui.text.font.FontWeight
-//import androidx.compose.ui.unit.TextUnit
 //import androidx.compose.ui.unit.dp
-//import androidx.compose.ui.unit.sp
-//import androidx.navigation.NavHostController
-//import androidx.navigation.compose.NavHost
-//import androidx.navigation.compose.composable
-//import androidx.navigation.compose.rememberNavController
-//import com.example.marketsurveillance.ui.theme.MarketSurveillanceTheme
-//
+//import androidx.core.app.ActivityCompat
+//import androidx.core.content.ContextCompat
+//import androidx.lifecycle.viewmodel.compose.viewModel
+//import com.example.marketsurveillance.ui.theme.CameraXGuideTheme
+//import kotlinx.coroutines.launch
 //
 //class MainActivity : ComponentActivity() {
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
-//
+//        if (!hasRequiredPermissions()) {
+//            ActivityCompat.requestPermissions(
+//                this, CAMERAX_PERMISSIONS, 0 //requestCode可以自己設定數字
+//            )
+//        }
 //        setContent {
-//            MarketSurveillanceTheme {
-//                val navController = rememberNavController()
-//                NavHost(navController, startDestination = "main") {
-//                    composable("main") {
-//                        MainScreen(navController)
+//            CameraXGuideTheme {
+//                val scope = rememberCoroutineScope()
+//                val scaffoldState = rememberBottomSheetScaffoldState()
+//                val controller = remember { //camerapreview.kt
+//                    LifecycleCameraController(applicationContext).apply {
+//                        setEnabledUseCases( //決定要有那些功能
+//                            CameraController.IMAGE_CAPTURE or
+//                                    CameraController.VIDEO_CAPTURE
+//                        )
 //                    }
-//                    composable("ProductInfo") {
-//                        MarketCheckScreen()
+//                }
+//                val viewModel = viewModel<MainViewModel>()
+//                val bitmaps by viewModel.bitmaps.collectAsState()
+//                //Bottom Sheet 是一種從屏幕底部彈出的可互動的半透明面板，通常用於顯示補充信息、操作或菜單
+//                BottomSheetScaffold(
+//                    scaffoldState = scaffoldState,
+//                    sheetPeekHeight = 0.dp,
+//                    sheetContent = {
+//                        PhotoBottomSheetContent(  //photobottomsheet.kt
+//                            bitmaps = bitmaps,
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                        )
+//                    }
+//                ) { padding ->
+//                    Box(  //建立畫面邊框
+//                        modifier = Modifier
+//                            .fillMaxSize()
+//                            .padding(padding)
+//                    ) {
+//                        CameraPreview( //camerapreview.kt
+//                            controller = controller,
+//                            modifier = Modifier
+//                                .fillMaxSize()
+//                        )
+//
+//                        IconButton(
+//                            onClick = {
+//                                controller.cameraSelector = //左上角前後鏡頭轉換
+//                                    if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
+//                                        CameraSelector.DEFAULT_FRONT_CAMERA
+//                                    } else CameraSelector.DEFAULT_BACK_CAMERA
+//                            },
+//                            modifier = Modifier
+//                                .offset(16.dp, 16.dp)
+//                        ) {
+//                            Icon(
+//                                imageVector = Icons.Default.Cameraswitch,
+//                                contentDescription = "Switch camera"
+//                            )
+//                        }
+//
+//                        Row( //下方選單
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .align(Alignment.BottomCenter)
+//                                .padding(16.dp),
+//                            horizontalArrangement = Arrangement.SpaceAround
+//                        ) {
+//                            IconButton( //打開app內相簿
+//                                onClick = {
+//                                    scope.launch {
+//                                        scaffoldState.bottomSheetState.expand()
+//                                    }
+//                                }
+//                            ) {
+//                                Icon(
+//                                    imageVector = Icons.Default.Photo,
+//                                    contentDescription = "Open gallery"
+//                                )
+//                            }
+//                            IconButton( //照相
+//                                onClick = {
+//                                    takePhoto(
+//                                        controller = controller,
+//                                        onPhotoTaken = viewModel::onTakePhoto
+//                                    )
+//                                }
+//                            ) {
+//                                Icon(
+//                                    imageVector = Icons.Default.PhotoCamera,
+//                                    contentDescription = "Take photo"
+//                                )
+//                            }
+//                        }
 //                    }
 //                }
 //            }
 //        }
 //    }
-//}
 //
-//@Composable
-//fun MainScreen(navController: NavHostController) {
-////    val activity = LocalContext.current as Activity
-////    val activity = LocalContext.current as AppCompatActivity
-////    val googleDriveLauncher = GoogleDriveLauncher(activity)
-////    val context = LocalContext.current
-//    Surface(
-//        modifier = Modifier.fillMaxSize(),
-//        color = MaterialTheme.colors.background
+//    private fun takePhoto(
+//        controller: LifecycleCameraController,
+//        onPhotoTaken: (Bitmap) -> Unit
 //    ) {
-//        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-//            Column(
-//                modifier = Modifier.align(Alignment.Center),
-//                verticalArrangement = Arrangement.Center
-//            ) {
-//                // 添加“市場檢查”按鈕
-//                GreetingButton(
-//                    name = "市場檢查",
-//                    onClick = {
-//                        // 导航到市场检查页面
-//                        navController.navigate("ProductInfo")
-//                    },
-//                    backgroundColor = Color(0xFFFF7F50),
-//                    contentColor = Color.White,
-//                    modifier = Modifier.padding(vertical = 10.dp),
-//                    fontSize = 50.sp
-//                )
+//        controller.takePicture(
+//            ContextCompat.getMainExecutor(applicationContext),
+//            object : OnImageCapturedCallback() {
+//                override fun onCaptureSuccess(image: ImageProxy) {
+//                    super.onCaptureSuccess(image)
 //
-//                // 添加“拍照上傳雲端”按鈕
-//                GreetingButton(
-//                    name = "拍照上傳雲端",
-//                    onClick = {
+//                    val matrix = Matrix().apply {
+//                        postRotate(image.imageInfo.rotationDegrees.toFloat())
+//                    }
+//                    val rotatedBitmap = Bitmap.createBitmap(
+//                        image.toBitmap(),
+//                        0,
+//                        0,
+//                        image.width,
+//                        image.height,
+//                        matrix,
+//                        true
+//                    )
 //
-//                        // 打開 Google Drive 應用程序
-////                        googleDriveLauncher.launchGoogleDriveWithPermissionCheck()
-////                        navController.navigate("GoogleDrive")
-////                        startForResult.launch(getGoogleSignInClient(ctx).signInIntent)
-//                    },
-//                    backgroundColor = Color(0xFFFFA500),
-//                    contentColor = Color.White,
-//                    modifier = Modifier.padding(vertical = 10.dp),
-//                    fontSize = 50.sp
-//                )
+//                    onPhotoTaken(rotatedBitmap)
+//                }
+//
+//                override fun onError(exception: ImageCaptureException) {
+//                    super.onError(exception)
+//                    Log.e("Camera", "Couldn't take photo: ", exception)
+//                }
 //            }
+//        )
+//    }
+//
+//    private fun hasRequiredPermissions(): Boolean {
+//        return CAMERAX_PERMISSIONS.all {
+//            ContextCompat.checkSelfPermission(
+//                applicationContext,
+//                it
+//            ) == PackageManager.PERMISSION_GRANTED
 //        }
 //    }
-//}
 //
-//@Composable
-//fun GreetingButton(
-//    name: String,
-//    onClick: () -> Unit,
-//    modifier: Modifier = Modifier,
-//    backgroundColor: Color = Color.Blue,
-//    contentColor: Color = Color.White,
-//    fontSize: TextUnit = 55.sp
-//) {
-//    Button(
-//        onClick = onClick,
-//        colors = ButtonDefaults.buttonColors(
-//            backgroundColor = backgroundColor,
-//            contentColor = contentColor
-//        ),
-//        modifier = modifier
-//    ) {
-//        Text(
-//            text = name,
-//            style = TextStyle(
-//                fontSize = fontSize,
-//                fontWeight = FontWeight.Bold
-//            )
+//    companion object {
+//        private val CAMERAX_PERMISSIONS = arrayOf(
+//            Manifest.permission.CAMERA,
+//            Manifest.permission.RECORD_AUDIO,
 //        )
 //    }
 //}
-//
+
+
+
+
+//20240215 有按鍵畫面
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.marketsurveillance.ui.theme.MarketSurveillanceTheme
+
+
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContent {
+            MarketSurveillanceTheme {
+                val navController = rememberNavController()
+                NavHost(navController, startDestination = "main") {
+                    composable("main") {
+                        MainScreen(navController)
+                    }
+                    composable("ProductInfo") {
+                        MarketCheckScreen()
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun MainScreen(navController: NavHostController) {
+//    val activity = LocalContext.current as Activity
+//    val activity = LocalContext.current as AppCompatActivity
+//    val googleDriveLauncher = GoogleDriveLauncher(activity)
+//    val context = LocalContext.current
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colors.background
+    ) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Column(
+                modifier = Modifier.align(Alignment.Center),
+                verticalArrangement = Arrangement.Center
+            ) {
+                // 添加“市場檢查”按鈕
+                GreetingButton(
+                    name = "市場檢查",
+                    onClick = {
+                        // 导航到市场检查页面
+                        navController.navigate("ProductInfo")
+                    },
+                    backgroundColor = Color(0xFFFF7F50),
+                    contentColor = Color.White,
+                    modifier = Modifier.padding(vertical = 10.dp),
+                    fontSize = 50.sp
+                )
+
+                // 添加“拍照上傳雲端”按鈕
+                GreetingButton(
+                    name = "拍照上傳雲端",
+                    onClick = {
+
+                        // 打開 Google Drive 應用程序
+//                        googleDriveLauncher.launchGoogleDriveWithPermissionCheck()
+//                        navController.navigate("GoogleDrive")
+//                        startForResult.launch(getGoogleSignInClient(ctx).signInIntent)
+                    },
+                    backgroundColor = Color(0xFFFFA500),
+                    contentColor = Color.White,
+                    modifier = Modifier.padding(vertical = 10.dp),
+                    fontSize = 50.sp
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun GreetingButton(
+    name: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = Color.Blue,
+    contentColor: Color = Color.White,
+    fontSize: TextUnit = 55.sp
+) {
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = backgroundColor,
+            contentColor = contentColor
+        ),
+        modifier = modifier
+    ) {
+        Text(
+            text = name,
+            style = TextStyle(
+                fontSize = fontSize,
+                fontWeight = FontWeight.Bold
+            )
+        )
+    }
+}
+
 
 
 /* class to demonstrate use of Drive files list API */

@@ -50,6 +50,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".CameraActivity"
+            android:label="Camera Activity">
+            <!-- 这里是 CameraActivity 的配置 -->
+        </activity>
     </application>
+
 
 </manifest>
