@@ -52,9 +52,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CameraActivity"
+            android:name=".camera.CameraActivity"
             android:label="Camera Activity">
             <!-- 这里是 CameraActivity 的配置 -->
+        </activity>
+        <activity
+            android:name=".login.UploadActivity"
+            android:label="Upload Activity">
+            <!-- 这里是 Uploadctivity 的配置 -->
         </activity>
     </application>
 

@@ -19,12 +19,12 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
+@HiltViewModel  //由 Hilt 管理的 ViewModel，這表示 Hilt 將會處理這個 ViewModel 的依賴注入
 class MainViewModel @Inject constructor(
-    private val authRepository: AuthRepository,
+    private val authRepository: AuthRepository,   //處理身份驗證相關的邏輯
     @ApplicationContext private val context: Context
 ):ViewModel() {
-
+//負責處理應用程式的主要邏輯，包括身份驗證、Google Drive 的操作以及處理與使用者互動相關的事件
     private val _state = MutableStateFlow(MainState())
     val state = _state.asStateFlow()
 

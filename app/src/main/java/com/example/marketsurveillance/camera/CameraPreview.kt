@@ -1,4 +1,4 @@
-package com.example.marketsurveillance
+package com.example.marketsurveillance.camera
 
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView

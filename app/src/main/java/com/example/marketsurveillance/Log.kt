@@ -1,6 +1,6 @@
 package com.example.marketsurveillance
 
-//google網站api串接-error 400-待找尋解方
+//google網站api串接-error 400-待找尋解方-改用firebase登入
 
 //import com.google.api.client.auth.oauth2.Credential
 //import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp

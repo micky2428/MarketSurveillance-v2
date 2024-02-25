@@ -1,4 +1,4 @@
-package com.example.marketsurveillance
+package com.example.marketsurveillance.camera
 
 //
 //import com.google.android.gms.drive.Drive

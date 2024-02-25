@@ -1,4 +1,4 @@
-package com.example.marketsurveillance
+package com.example.marketsurveillance.camera
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
