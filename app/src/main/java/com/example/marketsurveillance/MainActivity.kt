@@ -56,6 +56,7 @@ import com.example.marketsurveillance.login.MainViewModel
 import com.example.marketsurveillance.ui.theme.IntegrateGoogleDriveTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+//https://medium.com/@salman.alamoudi95/integrate-google-drive-for-backup-data-on-android-kotlin-jetpack-compose-e92cff32f71f
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.R)
