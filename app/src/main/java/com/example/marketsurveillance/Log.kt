@@ -23,6 +23,7 @@ package com.example.marketsurveillance
 //
 //
 ///* class to demonstrate use of Drive files list API */
+////https://medium.com/@logeshbommannan/uploading-files-to-google-drive-using-spring-boot-a-step-by-step-guide-2023-by-logesh-b-9b191b6c1b27
 //object DriveQuickstart {
 //    /**
 //     * Application name.
@@ -37,7 +38,7 @@ package com.example.marketsurveillance
 //    /**
 //     * Directory to store authorization tokens for this application.
 //     */
-//    private const val TOKENS_DIRECTORY_PATH = "tokens"
+//    private const val TOKENS_DIRECTORY_PATH = "906220912489-kkiglmrp505se9n89telqjpngiir3cp6.apps.googleusercontent.com"
 //
 //    /**
 //     * Global instance of the scopes required by this quickstart.
@@ -122,6 +123,9 @@ package com.example.marketsurveillance
 //        }
 //    }
 //}
-//
 
-//1130217
+
+//1130224
+//error:The loopback flow has been blocked in order to keep users secure. Follow the Loopback IP Address flow migration guide linked in the developer docs below to migrate your app to an alternative method.
+//https://developers.google.com/identity/protocols/oauth2/resources/loopback-migration?hl=zh-tw
+
