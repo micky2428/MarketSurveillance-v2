@@ -45,6 +45,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.marketsurveillance.ui.theme.CameraXGuideTheme
 import kotlinx.coroutines.launch
 
+////https://github.com/philipplackner/CameraXGuide/blob/taking-photos/app/src/androidTest/java/com/plcoding/cameraxguide/ExampleInstrumentedTest.kt
 
 //class MainActivity : ComponentActivity()
 class CameraActivity : ComponentActivity() {

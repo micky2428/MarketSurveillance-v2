@@ -1,39 +1,6 @@
 //@file:OptIn(ExperimentalMaterial3Api::class)
 package com.example.marketsurveillance
 
-import android.content.Context
-import android.content.Intent
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import com.example.marketsurveillance.login.UploadActivity
-import com.example.marketsurveillance.ui.theme.MarketSurveillanceTheme
-import dagger.hilt.android.AndroidEntryPoint
-
 //import android.os.Build
 //import android.os.Bundle
 //import android.widget.Toast
@@ -88,376 +55,129 @@ import dagger.hilt.android.AndroidEntryPoint
 //import com.example.marketsurveillance.login.MainViewModel
 //import com.example.marketsurveillance.ui.theme.IntegrateGoogleDriveTheme
 
-//https://medium.com/@salman.alamoudi95/integrate-google-drive-for-backup-data-on-android-kotlin-jetpack-compose-e92cff32f71f
-//@AndroidEntryPoint
-//class MainActivity : ComponentActivity() {
-//    @RequiresApi(Build.VERSION_CODES.R)
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContent {
-//            IntegrateGoogleDriveTheme {
-//                // A surface container using the 'background' color from the theme
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
-//                ) {
-//                    val viewModel = hiltViewModel<MainViewModel>()
-//                    val state by viewModel.state.collectAsState()
-//                    val effect by viewModel.effect.collectAsState()
-//
-//                    var showDialog by remember {
-//                        mutableStateOf(false)
-//                    }
-//                    val context = LocalContext.current
-//                    val signInLauncher = rememberLauncherForActivityResult(
-//                        contract = ActivityResultContracts.StartIntentSenderForResult(),
-//                        onResult = {
-//                            viewModel.onEvent(
-//                                MainEvent.OnSignInResult(
-//                                    it.data ?: return@rememberLauncherForActivityResult
-//                                )
-//                            )
-//                        }
-//                    )
-//                    val authorizeLauncher = rememberLauncherForActivityResult(
-//                        contract = ActivityResultContracts.StartIntentSenderForResult(),
-//                        onResult = {
-//                            viewModel.onEvent(
-//                                MainEvent.OnAuthorize(
-//                                    it.data ?: return@rememberLauncherForActivityResult
-//                                )
-//                            )
-//                        }
-//                    )
-//
-//                    val pickerPhotoLauncher = rememberLauncherForActivityResult(
-//                        contract = ActivityResultContracts.PickVisualMedia(),
-//                        onResult = {
-//                            viewModel.onEvent(
-//                                MainEvent.Backup(
-//                                    it ?: return@rememberLauncherForActivityResult
-//                                )
-//                            )
-//                        }
-//                    )
-//                    LaunchedEffect(key1 = effect) {
-//                        when (effect) {
-//                            is MainEffect.Authorize -> {
-//                                authorizeLauncher.launch(
-//                                    IntentSenderRequest.Builder((effect as MainEffect.Authorize).intentSender)
-//                                        .build()
-//                                )
-//                            }
-//
-//                            is MainEffect.SignIn -> {
-//                                signInLauncher.launch(
-//                                    IntentSenderRequest.Builder((effect as MainEffect.SignIn).intentSender)
-//                                        .build()
-//                                )
-//                            }
-//
-//                            null -> Unit
-//
-//                        }
-//                    }
-//                    if (showDialog) {
-//                        LaunchedEffect(key1 = true) {
-//                            viewModel.onEvent(MainEvent.GetFiles)
-//                        }
-//                        Dialog(onDismissRequest = { showDialog = false }) {
-//                            Surface(tonalElevation = 4.dp) {
-//                                LazyVerticalGrid(columns = GridCells.Fixed(2)) {
-//                                    items(state.restoreFiles) {
-//                                        Box(modifier = Modifier
-//                                            .fillMaxSize()
-//                                            .clickable {
-//                                                viewModel.onEvent(MainEvent.Restore(it.id))
-//                                                Toast
-//                                                    .makeText(context, "Saved to local storage", Toast.LENGTH_SHORT)
-//                                                    .show()
-//                                                showDialog = false
-//                                            }) {
-//                                            AsyncImage(
-//                                                model = ImageRequest.Builder(LocalContext
-//                                                    .current).data(it.thumbnailFileLink).placeholder(R.drawable.drive_icon).build(),
-//                                                contentDescription = "",
-//                                                contentScale = ContentScale.Crop,
-//                                                modifier = Modifier.size(150.dp)
-//                                            )
-//                                            Text(
-//                                                text = it.nameFile, modifier = Modifier
-//                                                    .fillMaxWidth()
-//                                                    .background(
-//                                                        Brush.linearGradient(
-//                                                            listOf(Color.Black, Color.Transparent)
-//                                                        )
-//                                                    )
-//                                                    .align(Alignment.BottomCenter)
-//                                            )
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                    Column(
-//                        modifier = Modifier.fillMaxSize(),
-//                        horizontalAlignment = Alignment.CenterHorizontally,
-//                        verticalArrangement = Arrangement.Center
-//                    ) {
-//                        Image(
-//                            painter = painterResource(id = R.drawable.drive_icon),
-//                            modifier = Modifier.size(80.dp),
-//                            contentDescription = ""
-//                        )
-//                        Text(text = "Backup Drive")
-//                        if (state.email == null) {
-//                            Button(onClick = { viewModel.onEvent(MainEvent.SignInGoogle) }) {
-//                                Text(text = "Sign in")
-//                            }
-//                        } else {
-//                            Row(
-//                                modifier = Modifier.fillMaxWidth(),
-//                                horizontalArrangement = Arrangement.SpaceEvenly
-//                            ) {
-//                                Button(onClick = { pickerPhotoLauncher.launch(PickVisualMediaRequest()) }) {
-//                                    Text(text = "Backup")
-//                                }
-//                                Button(onClick = {showDialog= true  }) {
-//                                    Text(text = "Restore")
-//                                }
-//                            }
-//                            Spacer(modifier = Modifier.height(16.dp))
-//                            Text(text = "Welcome ${state.email}")
-//                            Button(onClick = { viewModel.onEvent(MainEvent.SignOut) }) {
-//                                Text(text = "Sign out")
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
-//
-//@Composable
-//fun Greeting(name: String, modifier: Modifier = Modifier) {
-//    Text(
-//        text = "Hello $name!",
-//        modifier = modifier
-//    )
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun GreetingPreview() {
-//    IntegrateGoogleDriveTheme {
-//        Greeting("Android")
-//    }
-//}
+//---CAMERA TEST
+//*
+//* Copyright 2020 Google LLC. All rights reserved.
+//*
+//* Licensed under the Apache License, Version 2.0 (the "License");
+//* you may not use this file except in compliance with the License.
+//* You may obtain a copy of the License at
+//*
+//*     http://www.apache.org/licenses/LICENSE-2.0
+//*
+//* Unless required by applicable law or agreed to in writing, software
+//* distributed under the License is distributed on an "AS IS" BASIS,
+//* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+//* See the License for the specific language governing permissions and
+//* limitations under the License.
+//*/
 
+//package com.google.mlkit.vision.demo
+
+import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Bundle
+import android.util.Log
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.example.marketsurveillance.textdetector.ChooserActivity
+
+class EntryChoiceActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_vision_entry_choice) //外觀的檔案
+
+//        findViewById<TextView>(R.id.java_entry_point).setOnClickListener {
+//            val intent = Intent(this@EntryChoiceActivity, ChooserActivity::class.java)
+//            startActivity(intent)
+//        }
+
+        findViewById<TextView>(R.id.kotlin_entry_point).setOnClickListener {
+            val intent =
+                Intent(
+                    this@EntryChoiceActivity,
+                    com.example.marketsurveillance.textdetector.ChooserActivity::class.java
+                )
+            startActivity(intent)
+        }
+
+        if (!allRuntimePermissionsGranted()) {
+            getRuntimePermissions()
+        }
+    }
+
+    private fun allRuntimePermissionsGranted(): Boolean {
+        for (permission in REQUIRED_RUNTIME_PERMISSIONS) {
+            permission?.let {
+                if (!isPermissionGranted(this, it)) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    private fun getRuntimePermissions() {
+        val permissionsToRequest = ArrayList<String>()
+        for (permission in REQUIRED_RUNTIME_PERMISSIONS) {
+            permission?.let {
+                if (!isPermissionGranted(this, it)) {
+                    permissionsToRequest.add(permission)
+                }
+            }
+        }
+
+        if (permissionsToRequest.isNotEmpty()) {
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsToRequest.toTypedArray(),
+                PERMISSION_REQUESTS
+            )
+        }
+    }
+
+    private fun isPermissionGranted(context: Context, permission: String): Boolean {
+        if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.i(TAG, "Permission granted: $permission")
+            return true
+        }
+        Log.i(TAG, "Permission NOT granted: $permission")
+        return false
+    }
+
+    companion object {
+        private const val TAG = "EntryChoiceActivity"
+        private const val PERMISSION_REQUESTS = 1
+
+        private val REQUIRED_RUNTIME_PERMISSIONS =
+            arrayOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+    }
+}
+
+//這段程式碼是用於檢查和獲取運行時權限的。在 Android 中，某些操作需要在運行時獲得用戶的許可，例如訪問相機、存儲設備、位置等。這段程式碼的作用是檢查應用程式所需的運行時權限是否已經被授予，如果未授予，則向用戶請求這些權限。
+//
+//allRuntimePermissionsGranted() 函數用於檢查是否所有所需的運行時權限都已經被授予。它遍歷 REQUIRED_RUNTIME_PERMISSIONS 列表中的每個權限，並檢查每個權限是否已經被授予。如果任何一個權限未被授予，則返回 false，否則返回 true。
+//
+//getRuntimePermissions() 函數用於獲取那些尚未被授予的運行時權限。它遍歷 REQUIRED_RUNTIME_PERMISSIONS 列表中的每個權限，並將未被授予的權限添加到 permissionsToRequest 列表中。然後，如果 permissionsToRequest 列表不為空，則通過 ActivityCompat.requestPermissions() 方法向用戶請求這些權限。
 
 //
-////https://github.com/philipplackner/CameraXGuide/blob/taking-photos/app/src/androidTest/java/com/plcoding/cameraxguide/ExampleInstrumentedTest.kt
-//import android.Manifest
-//import android.content.pm.PackageManager
-//import android.graphics.Bitmap
-//import android.graphics.Matrix
-//import android.os.Bundle
-//import android.util.Log
-//import androidx.activity.ComponentActivity
-//import androidx.activity.compose.setContent
-//import androidx.camera.core.CameraSelector
-//import androidx.camera.core.ImageCapture.OnImageCapturedCallback
-//import androidx.camera.core.ImageCaptureException
-//import androidx.camera.core.ImageProxy
-//import androidx.camera.view.CameraController
-//import androidx.camera.view.LifecycleCameraController
-//import androidx.compose.foundation.layout.Arrangement
-//import androidx.compose.foundation.layout.Box
-//import androidx.compose.foundation.layout.Row
-//import androidx.compose.foundation.layout.fillMaxSize
-//import androidx.compose.foundation.layout.fillMaxWidth
-//import androidx.compose.foundation.layout.offset
-//import androidx.compose.foundation.layout.padding
-//import androidx.compose.material.icons.Icons
-//import androidx.compose.material.icons.filled.Cameraswitch
-//import androidx.compose.material.icons.filled.Photo
-//import androidx.compose.material.icons.filled.PhotoCamera
-//import androidx.compose.material3.BottomSheetScaffold
-//import androidx.compose.material3.ExperimentalMaterial3Api
-//import androidx.compose.material3.Icon
-//import androidx.compose.material3.IconButton
-//import androidx.compose.material3.rememberBottomSheetScaffoldState
-//import androidx.compose.runtime.collectAsState
-//import androidx.compose.runtime.getValue
-//import androidx.compose.runtime.remember
-//import androidx.compose.runtime.rememberCoroutineScope
-//import androidx.compose.ui.Alignment
-//import androidx.compose.ui.Modifier
-//import androidx.compose.ui.unit.dp
-//import androidx.core.app.ActivityCompat
-//import androidx.core.content.ContextCompat
-//import androidx.lifecycle.viewmodel.compose.viewModel
-//import com.example.marketsurveillance.ui.theme.CameraXGuideTheme
-//import kotlinx.coroutines.launch
-//
-//class MainActivity : ComponentActivity() {
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        if (!hasRequiredPermissions()) {
-//            ActivityCompat.requestPermissions(
-//                this, CAMERAX_PERMISSIONS, 0 //requestCode可以自己設定數字
-//            )
-//        }
-//        setContent {
-//            CameraXGuideTheme {
-//                val scope = rememberCoroutineScope()
-//                val scaffoldState = rememberBottomSheetScaffoldState()
-//                val controller = remember { //camerapreview.kt
-//                    LifecycleCameraController(applicationContext).apply {
-//                        setEnabledUseCases( //決定要有那些功能
-//                            CameraController.IMAGE_CAPTURE or
-//                                    CameraController.VIDEO_CAPTURE
-//                        )
-//                    }
-//                }
-//                val viewModel = viewModel<MainViewModel>()
-//                val bitmaps by viewModel.bitmaps.collectAsState()
-//                //Bottom Sheet 是一種從屏幕底部彈出的可互動的半透明面板，通常用於顯示補充信息、操作或菜單
-//                BottomSheetScaffold(
-//                    scaffoldState = scaffoldState,
-//                    sheetPeekHeight = 0.dp,
-//                    sheetContent = {
-//                        PhotoBottomSheetContent(  //photobottomsheet.kt
-//                            bitmaps = bitmaps,
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                        )
-//                    }
-//                ) { padding ->
-//                    Box(  //建立畫面邊框
-//                        modifier = Modifier
-//                            .fillMaxSize()
-//                            .padding(padding)
-//                    ) {
-//                        CameraPreview( //camerapreview.kt
-//                            controller = controller,
-//                            modifier = Modifier
-//                                .fillMaxSize()
-//                        )
-//
-//                        IconButton(
-//                            onClick = {
-//                                controller.cameraSelector = //左上角前後鏡頭轉換
-//                                    if (controller.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
-//                                        CameraSelector.DEFAULT_FRONT_CAMERA
-//                                    } else CameraSelector.DEFAULT_BACK_CAMERA
-//                            },
-//                            modifier = Modifier
-//                                .offset(16.dp, 16.dp)
-//                        ) {
-//                            Icon(
-//                                imageVector = Icons.Default.Cameraswitch,
-//                                contentDescription = "Switch camera"
-//                            )
-//                        }
-//
-//                        Row( //下方選單
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .align(Alignment.BottomCenter)
-//                                .padding(16.dp),
-//                            horizontalArrangement = Arrangement.SpaceAround
-//                        ) {
-//                            IconButton( //打開app內相簿
-//                                onClick = {
-//                                    scope.launch {
-//                                        scaffoldState.bottomSheetState.expand()
-//                                    }
-//                                }
-//                            ) {
-//                                Icon(
-//                                    imageVector = Icons.Default.Photo,
-//                                    contentDescription = "Open gallery"
-//                                )
-//                            }
-//                            IconButton( //照相
-//                                onClick = {
-//                                    takePhoto(
-//                                        controller = controller,
-//                                        onPhotoTaken = viewModel::onTakePhoto
-//                                    )
-//                                }
-//                            ) {
-//                                Icon(
-//                                    imageVector = Icons.Default.PhotoCamera,
-//                                    contentDescription = "Take photo"
-//                                )
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
-//
-//    private fun takePhoto(
-//        controller: LifecycleCameraController,
-//        onPhotoTaken: (Bitmap) -> Unit
-//    ) {
-//        controller.takePicture(
-//            ContextCompat.getMainExecutor(applicationContext),
-//            object : OnImageCapturedCallback() {
-//                override fun onCaptureSuccess(image: ImageProxy) {
-//                    super.onCaptureSuccess(image)
-//
-//                    val matrix = Matrix().apply {
-//                        postRotate(image.imageInfo.rotationDegrees.toFloat())
-//                    }
-//                    val rotatedBitmap = Bitmap.createBitmap(
-//                        image.toBitmap(),
-//                        0,
-//                        0,
-//                        image.width,
-//                        image.height,
-//                        matrix,
-//                        true
-//                    )
-//
-//                    onPhotoTaken(rotatedBitmap)
-//                }
-//
-//                override fun onError(exception: ImageCaptureException) {
-//                    super.onError(exception)
-//                    Log.e("Camera", "Couldn't take photo: ", exception)
-//                }
-//            }
-//        )
-//    }
-//
-//    private fun hasRequiredPermissions(): Boolean {
-//        return CAMERAX_PERMISSIONS.all {
-//            ContextCompat.checkSelfPermission(
-//                applicationContext,
-//                it
-//            ) == PackageManager.PERMISSION_GRANTED
-//        }
-//    }
-//
-//    companion object {
-//        private val CAMERAX_PERMISSIONS = arrayOf(
-//            Manifest.permission.CAMERA,
-//            Manifest.permission.RECORD_AUDIO,
-//        )
-//    }
-//}
-
 
 
 //
 //20240215 有按鍵畫面
 
+//import android.content.Context
+//import android.content.Intent
 //import android.os.Bundle
 //import androidx.activity.ComponentActivity
 //import androidx.activity.compose.setContent
@@ -475,6 +195,7 @@ import dagger.hilt.android.AndroidEntryPoint
 //import androidx.compose.ui.Alignment
 //import androidx.compose.ui.Modifier
 //import androidx.compose.ui.graphics.Color
+//import androidx.compose.ui.platform.LocalContext
 //import androidx.compose.ui.text.TextStyle
 //import androidx.compose.ui.text.font.FontWeight
 //import androidx.compose.ui.unit.TextUnit
@@ -484,113 +205,114 @@ import dagger.hilt.android.AndroidEntryPoint
 //import androidx.navigation.compose.NavHost
 //import androidx.navigation.compose.composable
 //import androidx.navigation.compose.rememberNavController
+//import com.example.marketsurveillance.login.UploadActivity
 //import com.example.marketsurveillance.ui.theme.MarketSurveillanceTheme
-
-
-
-
-@AndroidEntryPoint
-class MainActivity : ComponentActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContent {
-            MarketSurveillanceTheme {
-                val navController = rememberNavController()
-                NavHost(navController, startDestination = "main") {
-                    composable("main") {
-                        MainScreen(navController)
-                    }
-                    composable("ProductInfo") {
-                        MarketCheckScreen()
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun MainScreen(navController: NavHostController) {
-//    val activity = LocalContext.current as Activity
-//    val activity = LocalContext.current as AppCompatActivity
-//    val googleDriveLauncher = GoogleDriveLauncher(activity)
-    val context = LocalContext.current //for UploadActivity
-    fun startUploadActivity(context: Context) {
-        val intent = Intent(context, UploadActivity::class.java)
-        context.startActivity(intent)
-    }
-
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colors.background
-    ) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Column(
-                modifier = Modifier.align(Alignment.Center),
-                verticalArrangement = Arrangement.Center
-            ) {
-                // 添加“市場檢查”按鈕
-                GreetingButton(
-                    name = "市場檢查",
-                    onClick = {
-                        // 导航到市场检查页面
-                        navController.navigate("ProductInfo")
-                    },
-                    backgroundColor = Color(0xFFFF7F50),
-                    contentColor = Color.White,
-                    modifier = Modifier.padding(vertical = 10.dp),
-                    fontSize = 50.sp
-                )
-
-                // 添加“拍照上傳雲端”按鈕
-                GreetingButton(
-
-                    name = "拍照上傳雲端",
-                    onClick = {
-                        startUploadActivity(context)
-                        // 打開 Google Drive 應用程序
-//                        googleDriveLauncher.launchGoogleDriveWithPermissionCheck()
-//                        navController.navigate("GoogleDrive")
-//                        startForResult.launch(getGoogleSignInClient(ctx).signInIntent)
-                    },
-                    backgroundColor = Color(0xFFFFA500),
-                    contentColor = Color.White,
-                    modifier = Modifier.padding(vertical = 10.dp),
-                    fontSize = 50.sp
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun GreetingButton(
-    name: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    backgroundColor: Color = Color.Blue,
-    contentColor: Color = Color.White,
-    fontSize: TextUnit = 55.sp
-) {
-    Button(
-        onClick = onClick,
-        colors = ButtonDefaults.buttonColors(
-            backgroundColor = backgroundColor,
-            contentColor = contentColor
-        ),
-        modifier = modifier
-    ) {
-        Text(
-            text = name,
-            style = TextStyle(
-                fontSize = fontSize,
-                fontWeight = FontWeight.Bold
-            )
-        )
-    }
-}
+//import dagger.hilt.android.AndroidEntryPoint
+//
+//
+////1130228缺便是
+//@AndroidEntryPoint
+//class MainActivity : ComponentActivity() {
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//
+//        setContent {
+//            MarketSurveillanceTheme {
+//                val navController = rememberNavController()
+//                NavHost(navController, startDestination = "main") {
+//                    composable("main") {
+//                        MainScreen(navController)
+//                    }
+//                    composable("ProductInfo") {
+//                        MarketCheckScreen()
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
+//
+//@Composable
+//fun MainScreen(navController: NavHostController) {
+////    val activity = LocalContext.current as Activity
+////    val activity = LocalContext.current as AppCompatActivity
+////    val googleDriveLauncher = GoogleDriveLauncher(activity)
+//    val context = LocalContext.current //for UploadActivity
+//    fun startUploadActivity(context: Context) {
+//        val intent = Intent(context, UploadActivity::class.java)
+//        context.startActivity(intent)
+//    }
+//
+//    Surface(
+//        modifier = Modifier.fillMaxSize(),
+//        color = MaterialTheme.colors.background
+//    ) {
+//        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+//            Column(
+//                modifier = Modifier.align(Alignment.Center),
+//                verticalArrangement = Arrangement.Center
+//            ) {
+//                // 添加“市場檢查”按鈕
+//                GreetingButton(
+//                    name = "市場檢查",
+//                    onClick = {
+//                        // 导航到市场检查页面
+//                        navController.navigate("ProductInfo")
+//                    },
+//                    backgroundColor = Color(0xFFFF7F50),
+//                    contentColor = Color.White,
+//                    modifier = Modifier.padding(vertical = 10.dp),
+//                    fontSize = 50.sp
+//                )
+//
+//                // 添加“拍照上傳雲端”按鈕
+//                GreetingButton(
+//
+//                    name = "拍照上傳雲端",
+//                    onClick = {
+//                        startUploadActivity(context)
+//                        // 打開 Google Drive 應用程序
+////                        googleDriveLauncher.launchGoogleDriveWithPermissionCheck()
+////                        navController.navigate("GoogleDrive")
+////                        startForResult.launch(getGoogleSignInClient(ctx).signInIntent)
+//                    },
+//                    backgroundColor = Color(0xFFFFA500),
+//                    contentColor = Color.White,
+//                    modifier = Modifier.padding(vertical = 10.dp),
+//                    fontSize = 50.sp
+//                )
+//            }
+//        }
+//    }
+//}
+//
+//@Composable
+//fun GreetingButton(
+//    name: String,
+//    onClick: () -> Unit,
+//    modifier: Modifier = Modifier,
+//    backgroundColor: Color = Color.Blue,
+//    contentColor: Color = Color.White,
+//    fontSize: TextUnit = 55.sp
+//) {
+//    Button(
+//        onClick = onClick,
+//        colors = ButtonDefaults.buttonColors(
+//            backgroundColor = backgroundColor,
+//            contentColor = contentColor
+//        ),
+//        modifier = modifier
+//    ) {
+//        Text(
+//            text = name,
+//            style = TextStyle(
+//                fontSize = fontSize,
+//                fontWeight = FontWeight.Bold
+//            )
+//        )
+//    }
+//}
 
 //---
 

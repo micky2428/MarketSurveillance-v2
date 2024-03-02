@@ -3,11 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools">
 <!--    package="com.example.marketsurveillance">-->
 
+    <!--文字辨識-->
+    <!-- CameraX libraries require minSdkVersion 21, while this quickstart app
+supports low to 19. Needs to use overrideLibrary to make the merger tool
+ignore this conflict and import the libraries while keeping the app's lower
+minSdkVersion value. In code, will check SDK version, before calling CameraX
+APIs. -->
+    <uses-sdk
+        tools:overrideLibrary="
+          androidx.camera.camera2, androidx.camera.core,
+          androidx.camera.view, androidx.camera.lifecycle,
+          com.google.mlkit.vision.segmentation.subject" />
+    <!--文字辨識-->
+
     <!--google drive權限-->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
-<!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
-<!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
 
     <!--相機權限-->

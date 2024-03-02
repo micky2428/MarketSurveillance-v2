@@ -4,6 +4,7 @@ plugins {
     //kapt-kotlin插件
     kotlin("kapt")
     //hilt-https://developer.android.com/training/dependency-injection/hilt-android?hl=zh-tw
+    //google login
     //project那邊也要新增，否則會錯誤
     id("com.google.dagger.hilt.android")
     id("com.google.gms.google-services")
@@ -166,6 +167,21 @@ dependencies {
     implementation ("androidx.camera:camera-video:${camerax_version}")
     implementation ("androidx.camera:camera-view:${camerax_version}")
     implementation ("androidx.camera:camera-extensions:${camerax_version}")
+    //便是
+    //https://developers.google.com/ml-kit/vision/text-recognition/v2/android?hl=zh-tw
+    implementation ("com.google.mlkit:text-recognition:16.0.0")
+
+    // To recognize Chinese script
+    implementation ("com.google.mlkit:text-recognition-chinese:16.0.0")
+
+    // To recognize Devanagari script
+    implementation ("com.google.mlkit:text-recognition-devanagari:16.0.0")
+
+    // To recognize Japanese script
+    implementation ("com.google.mlkit:text-recognition-japanese:16.0.0")
+
+    // To recognize Korean script
+    implementation ("com.google.mlkit:text-recognition-korean:16.0.0")
 
 }
 

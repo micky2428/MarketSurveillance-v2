@@ -52,7 +52,7 @@ import coil.request.ImageRequest
 import com.example.marketsurveillance.R
 import com.example.marketsurveillance.ui.theme.IntegrateGoogleDriveTheme
 import dagger.hilt.android.AndroidEntryPoint
-
+//https://medium.com/@salman.alamoudi95/integrate-google-drive-for-backup-data-on-android-kotlin-jetpack-compose-e92cff32f71f
 @AndroidEntryPoint//注入viewmodel
 class UploadActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.R)
