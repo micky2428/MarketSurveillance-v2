@@ -3,3 +3,5 @@
 
     <style name="Theme.MarketSurveillance" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>
+
+<!--    為了測試文字辨識先關掉-->

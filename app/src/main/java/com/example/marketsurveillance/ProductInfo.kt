@@ -43,6 +43,9 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.marketsurveillance.camera.CameraActivity
+import com.example.marketsurveillance.textdetector.ChooserActivity
+import com.google.mlkit.vision.text.TextRecognizerOptionsInterface
+
 
 //人名選單
 @Composable
@@ -107,28 +110,32 @@ fun MarketCheckScreen() {
     var productSourceCountry by remember { mutableStateOf(TextFieldValue()) }
     var bsmiNumber by remember { mutableStateOf(TextFieldValue()) }
 
+//    文字辨識輸出
+//    var recognizedText by remember { mutableStateOf("") }
+
+
 
 //設定時間
 //    val dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-    var specDate by remember { mutableStateOf(TextFieldValue()) }
-    val context = LocalContext.current
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colors.background
-    ) {
-        LazyColumn(modifier = Modifier.padding(16.dp)) {
-            item {
-                Text(text = "請輸入合格的商品資訊", fontSize = 30.sp)
-            }
-            // 檢查日期選擇器
-            item {
-                TextField(
-                    value = specDate,
-                    onValueChange = { specDate = it },
-                    label = { Text("檢查日期(Ex:1130101)") }
-                )
-            }
-            // 檢查日期選擇器，在很突兀的位置，待修改
+        var specDate by remember { mutableStateOf(TextFieldValue()) }
+        val context = LocalContext.current
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colors.background
+        ) {
+            LazyColumn(modifier = Modifier.padding(16.dp)) {
+                item {
+                    Text(text = "請輸入合格的商品資訊", fontSize = 30.sp)
+                }
+                // 檢查日期選擇器
+                item {
+                    TextField(
+                        value = specDate,
+                        onValueChange = { specDate = it },
+                        label = { Text("檢查日期(Ex:1130101)") }
+                    )
+                }
+                // 檢查日期選擇器，在很突兀的位置，待修改
 //            item {TextField(
 //                value = specDate,
 //                onValueChange = { specDate = it },
@@ -141,79 +148,87 @@ fun MarketCheckScreen() {
 //                    )
 //                }
 //            )}
-            // 人名選擇器
-            item { NamePicker() }
-            //商品資訊
-            item {
-                TextField(
-                    value = productName,
-                    onValueChange = { productName = it },
-                    label = { Text("商品名稱") }
-                )
-            }
-            item {
-                TextField(
-                    value = productNumber,
-                    onValueChange = { productNumber = it },
-                    label = { Text("型號") }
-                )
-            }
-            item {
-                TextField(
-                    value = productSpec,
-                    onValueChange = { productSpec = it },
-                    label = { Text("規格") }
-                )
-            }
-            item {
-                TextField(
-                    value = productBrand,
-                    onValueChange = { productBrand = it },
-                    label = { Text("廠牌") }
-                )
-            }
-            item {
-                TextField(
-                    value = productDate,
-                    onValueChange = { productDate = it },
-                    label = { Text("製造日期") }
-                )
-            }
-            item {
-                TextField(
-                    value = productBatch,
-                    onValueChange = { productBatch = it },
-                    label = { Text("批號") }
-                )
-            }
-            item {
-                TextField(
-                    value = producerName,
-                    onValueChange = { producerName = it },
-                    label = { Text("產製者或輸入者名稱") }
-                )
-            }
-            item {
-                TextField(
-                    value = producerAddress,
-                    onValueChange = { producerAddress = it },
-                    label = { Text("產製者或輸入者地址") }
-                )
-            }
-            item {
-                TextField(
-                    value = productSourceCountry,
-                    onValueChange = { productSourceCountry = it },
-                    label = { Text("生產國別") }
-                )
-            }
-            item {
-                TextField(
-                    value = bsmiNumber,
-                    onValueChange = { bsmiNumber = it },
-                    label = { Text("商品檢驗標識識別號碼") }
-                )
-            }
+                // 人名選擇器
+                item { NamePicker() }
+                //商品資訊
+                item {
+                    TextField(
+                        value = productName,
+                        onValueChange = { productName = it },
+                        label = { Text("商品名稱") }
+                    )
+                }
+                item {
+                    TextField(
+                        value = productNumber,
+                        onValueChange = { productNumber = it },
+                        label = { Text("型號") }
+                    )
+                }
+                item {
+                    TextField(
+                        value = productSpec,
+                        onValueChange = { productSpec = it },
+                        label = { Text("規格") }
+                    )
+                }
+                item {
+                    TextField(
+                        value = productBrand,
+                        onValueChange = { productBrand = it },
+                        label = { Text("廠牌") }
+                    )
+                }
+                item {
+                    TextField(
+                        value = productDate,
+                        onValueChange = { productDate = it },
+                        label = { Text("製造日期") }
+                    )
+                }
+                item {
+                    TextField(
+                        value = productBatch,
+                        onValueChange = { productBatch = it },
+                        label = { Text("批號") }
+                    )
+                }
+                item {
+                    TextField(
+                        value = producerName,
+                        onValueChange = { producerName = it },
+                        label = { Text("產製者或輸入者名稱") }
+                    )
+                }
+                item {
+                    TextField(
+                        value = producerAddress,
+                        onValueChange = { producerAddress = it },
+                        label = { Text("產製者或輸入者地址") }
+                    )
+                }
+                item {
+                    TextField(
+                        value = productSourceCountry,
+                        onValueChange = { productSourceCountry = it },
+                        label = { Text("生產國別") }
+                    )
+                }
+                item {
+                    TextField(
+                        value = bsmiNumber,
+                        onValueChange = { bsmiNumber = it },
+                        label = { Text("商品檢驗標識識別號碼") }
+                    )
+                }
+//                item {
+//                    TextField(
+//                        value = TextFieldValue(text = recognizedText),
+//                        onValueChange = { },
+//                        label = { Text("辨識到的文字") },
+//                        readOnly = true // 設置為只讀，避免用戶編輯
+//                    )
+//                }
 //日後可以改成合格不合格的判定
 //            Checkbox(
 //                checked = isAvailable,
@@ -222,32 +237,40 @@ fun MarketCheckScreen() {
 //            ) {
 //                Text(text = "商品是否可用")
 //            }
-            item {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Button(
-                        onClick = {
-                            // 处理提交商品信息的逻辑
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("提交")
-                    }
-                    Spacer(modifier = Modifier.width(16.dp)) // 添加间距
+                item {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Button(
+                            onClick = {
+                                // 处理提交商品信息的逻辑
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text("提交")
+                        }
+                        Spacer(modifier = Modifier.width(16.dp)) // 添加间距
 
-                    Button(
-                        onClick = {
-                            // 处理拍照逻辑
-                            startCameraActivity(context)
+                        Button(
+                            onClick = {
+                                // 处理拍照逻辑
+//                            startCameraActivity(context)
+                                //文字辨識
+                                val intent = Intent(context, ChooserActivity::class.java)
+                                context.startActivity(intent)
 
-                        },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("拍照")
+                            },
+                            modifier = Modifier.weight(1f)
+                        ) {
+                            Text("拍照")
+                        }
+
                     }
                 }
             }
         }
     }
 
-}
+
+
+
+
 

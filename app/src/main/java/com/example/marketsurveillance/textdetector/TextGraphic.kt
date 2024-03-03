@@ -35,7 +35,7 @@ import kotlin.math.min
  */
 class TextGraphic
 constructor(
-    overlay: GraphicOverlay?,
+    overlay: GraphicOverlay,
     private val text: Text,
     private val shouldGroupTextInBlocks: Boolean,
     private val showLanguageTag: Boolean,

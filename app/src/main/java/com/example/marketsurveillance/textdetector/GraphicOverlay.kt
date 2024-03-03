@@ -1,8 +1,5 @@
 package com.example.marketsurveillance.textdetector
 
-//這段程式碼提供了一個可在相應的預覽上疊加自定義圖形的機制，並提供了相應的轉換方法，以便將圖形從圖像坐標系統轉換為視圖坐標系統。
-// 這對於在相機預覽中顯示檢測結果、特徵點等非常有用。
-
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Matrix
@@ -12,6 +9,9 @@ import android.view.View
 import com.example.marketsurveillance.textdetector.GraphicOverlay.Graphic
 import com.google.common.base.Preconditions
 import com.google.common.primitives.Ints
+
+//這段程式碼提供了一個可在相應的預覽上疊加自定義圖形的機制，並提供了相應的轉換方法，以便將圖形從圖像坐標系統轉換為視圖坐標系統。
+// 這對於在相機預覽中顯示檢測結果、特徵點等非常有用。
 
 /*
  * Copyright 2020 Google LLC. All rights reserved.
@@ -83,7 +83,7 @@ class GraphicOverlay(context: Context?, attrs: AttributeSet?) :
      * this and implement the [Graphic.draw] method to define the graphics element. Add
      * instances to the overlay using [GraphicOverlay.add].
      */
-    abstract class Graphic(private val overlay: GraphicOverlay?) {
+    abstract class Graphic(private val overlay: GraphicOverlay) {
         /**
          * Draw the graphic on the supplied canvas. Drawing should use the following methods to convert
          * to view coordinates for the graphics that are drawn:

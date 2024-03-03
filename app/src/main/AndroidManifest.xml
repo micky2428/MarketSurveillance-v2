@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-<!--    package="com.example.marketsurveillance">-->
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.marketsurveillance"
+    android:installLocation="auto">
 
     <!--文字辨識-->
     <!-- CameraX libraries require minSdkVersion 21, while this quickstart app
@@ -59,10 +60,34 @@ APIs. -->
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--            android:theme="@style/Theme.MarketSurveillance"-->
+        <activity
+            android:name=".textdetector.ChooserActivity"
+            android:theme="@style/Theme.AppCompat">
+        </activity>
+        <activity
+            android:name=".textdetector.mode.StillImageActivity"
+            android:theme="@style/Theme.AppCompat">
+        </activity>
+        <activity
+            android:name=".textdetector.preference.SettingsActivity"
+            android:theme="@style/Theme.AppCompat">
+        </activity>
+        <activity
+            android:name=".textdetector.NextActivity"
+            android:theme="@style/Theme.AppCompat">
+        </activity>
+        <activity
+            android:name=".textdetector.YourActivity"
+            android:theme="@style/Theme.AppCompat">
+        </activity>
+
+
+
+
         <activity
             android:name=".camera.CameraActivity"
             android:label="Camera Activity">

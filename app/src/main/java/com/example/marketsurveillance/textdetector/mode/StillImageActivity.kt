@@ -99,6 +99,7 @@ class StillImageActivity : AppCompatActivity() {
     private var imageMaxHeight = 0
     private var imageProcessor: VisionImageProcessor? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_still_image)
@@ -194,6 +195,9 @@ class StillImageActivity : AppCompatActivity() {
         if (VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             options.add(SUBJECT_SEGMENTATION)
         }
+//檢查 Android 系統的版本是否為 Android Nougat（API 級別 24）或更新版本。如果是的話，就將一個常量值 SUBJECT_SEGMENTATION 加入到 options 中。
+//SUBJECT_SEGMENTATION 到 options 中，可能是為了指示某些操作或功能應該在支援主題分割的設備上執行。
+// 主題分割是 Android Nougat 新增的一個功能，允許應用程式在分割的視窗中運行，以實現更好的多工體驗。
 
         // Creating adapter for featureSpinner
         val dataAdapter = ArrayAdapter(this, R.layout.spinner_style, options)
@@ -486,11 +490,11 @@ class StillImageActivity : AppCompatActivity() {
 //        private const val CUSTOM_AUTOML_OBJECT_DETECTION = "Custom AutoML Object Detection (Flower)"
 //        private const val FACE_DETECTION = "Face Detection"
 //        private const val BARCODE_SCANNING = "Barcode Scanning"
-        private const val TEXT_RECOGNITION_LATIN = "Text Recognition Latin"
-        private const val TEXT_RECOGNITION_CHINESE = "Text Recognition Chinese"
+        private const val TEXT_RECOGNITION_LATIN = "Text Recognition Latin(拉丁文)"
+        private const val TEXT_RECOGNITION_CHINESE = "Text Recognition Chinese(中文)"
 //        private const val TEXT_RECOGNITION_DEVANAGARI = "Text Recognition Devanagari"
-        private const val TEXT_RECOGNITION_JAPANESE = "Text Recognition Japanese"
-        private const val TEXT_RECOGNITION_KOREAN = "Text Recognition Korean"
+        private const val TEXT_RECOGNITION_JAPANESE = "Text Recognition Japanese(日文)"
+        private const val TEXT_RECOGNITION_KOREAN = "Text Recognition Korean(韓文)"
 //        private const val IMAGE_LABELING = "Image Labeling"
 //        private const val IMAGE_LABELING_CUSTOM = "Custom Image Labeling (Birds)"
 //        private const val CUSTOM_AUTOML_LABELING = "Custom AutoML Image Labeling (Flower)"
@@ -503,10 +507,10 @@ class StillImageActivity : AppCompatActivity() {
         private const val SIZE_1024_768 = "w:1024" // ~1024*768 in a normal ratio
         private const val SIZE_640_480 = "w:640" // ~640*480 in a normal ratio
         private const val SIZE_ORIGINAL = "w:original" // Original image size
-        private const val KEY_IMAGE_URI = "com.google.mlkit.vision.demo.KEY_IMAGE_URI"
-        private const val KEY_IMAGE_MAX_WIDTH = "com.google.mlkit.vision.demo.KEY_IMAGE_MAX_WIDTH"
-        private const val KEY_IMAGE_MAX_HEIGHT = "com.google.mlkit.vision.demo.KEY_IMAGE_MAX_HEIGHT"
-        private const val KEY_SELECTED_SIZE = "com.google.mlkit.vision.demo.KEY_SELECTED_SIZE"
+        private const val KEY_IMAGE_URI = "com.example.marketsurveillance.textdetector.KEY_IMAGE_URI"
+        private const val KEY_IMAGE_MAX_WIDTH = "com.example.marketsurveillance.textdetector.KEY_IMAGE_MAX_WIDTH"
+        private const val KEY_IMAGE_MAX_HEIGHT = "com.example.marketsurveillance.textdetector.KEY_IMAGE_MAX_HEIGHT"
+        private const val KEY_SELECTED_SIZE = "com.example.marketsurveillance.textdetector.KEY_SELECTED_SIZE"
         private const val REQUEST_IMAGE_CAPTURE = 1001
         private const val REQUEST_CHOOSE_IMAGE = 1002
     }

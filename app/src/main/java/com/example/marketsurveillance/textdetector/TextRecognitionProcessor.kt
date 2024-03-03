@@ -16,10 +16,14 @@ package com.example.marketsurveillance.textdetector
  * limitations under the License.
  */
 
-//package com.google.mlkit.vision.demo.kotlin.textdetector
 
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import android.util.Log
+import android.widget.Button
+import androidx.appcompat.app.AppCompatActivity
+import com.example.marketsurveillance.R
 import com.example.marketsurveillance.textdetector.preference.PreferenceUtils
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
@@ -30,10 +34,15 @@ import com.google.mlkit.vision.text.TextRecognizerOptionsInterface
 
 //要解決這個問題，你需要在TextRecognitionProcessor類別中提供一個具體的processBitmap方法實現，以符合VisionProcessorBase抽象類別的要求。
 
+//interface TextResultListener {
+//    fun onTextResultDetected(resultText: String)
+//}
+
+
 /** Processor for the text detector demo. */
-class TextRecognitionProcessor(
+class TextRecognitionProcessor(  //連動stillimageactivity
     private val context: Context,
-    textRecognizerOptions: TextRecognizerOptionsInterface
+    textRecognizerOptions: TextRecognizerOptionsInterface,
 ) : VisionProcessorBase<Text>(context) {
     private val textRecognizer: TextRecognizer = TextRecognition.getClient(textRecognizerOptions)
     private val shouldGroupRecognizedTextInBlocks: Boolean =
@@ -41,6 +50,24 @@ class TextRecognitionProcessor(
     private val showLanguageTag: Boolean = PreferenceUtils.showLanguageTag(context)
     private val showConfidence: Boolean = PreferenceUtils.shouldShowTextConfidence(context)
 
+    //文字辨識輸出結果
+    private var resultText: String = ""
+
+//     定義一個函數用於處理辨識到的結果
+//    private fun handleTextResult(resultText: String) {
+//        // 在這裡處理辨識到的文字，例如將其顯示在文字框中
+//        Log.d(TAG, "Recognized Text: $resultText")
+//    }
+//
+//    // 将 TextResultListener 设置为属性
+//    private var textResultListener: TextResultListener? = null
+//
+//    // 设置 TextResultListener
+//    fun setTextResultListener(listener: TextResultListener) {
+//        this.textResultListener = listener
+//    }
+//    }
+//---
     override fun stop() {
         super.stop()
         textRecognizer.close()
@@ -50,8 +77,36 @@ class TextRecognitionProcessor(
         return textRecognizer.process(image)
     }
 
+    //文字處理功能，按鈕@activitystill
+
+    // 用于处理识别到的文字
+    fun processText(text: Text) {
+        val stringBuilder = StringBuilder()
+        for (block in text.textBlocks) {
+            for (line in block.lines) {
+                stringBuilder.append(line.text).append("\n")
+            }
+        }
+
+        // 将辨识到的文字设置为 resultText
+        resultText = stringBuilder.toString()
+    }
+
+    // 启动下一个页面
+//    fun startNextActivity() {
+//        val intent = Intent(context, NextActivity::class.java).apply {
+//            putExtra("resultText", resultText)
+//        }
+//        // 启动下一个页面
+//        context.startActivity(intent)
+//    }
+
+//----
+
     override fun onSuccess(text: Text, graphicOverlay: GraphicOverlay) {
         Log.d(TAG, "On-device Text detection successful")
+        //處理文字輸出
+        processText(text)
         logExtrasForTesting(text)
         graphicOverlay.add(
             TextGraphic(
@@ -62,7 +117,11 @@ class TextRecognitionProcessor(
                 showConfidence
             )
         )
+
+        Log.d(TAG, "Recognized Text: $resultText")
     }
+
+
 
     override fun onFailure(e: Exception) {
         Log.w(TAG, "Text detection failed.$e")
@@ -124,6 +183,26 @@ class TextRecognitionProcessor(
         }
     }
 }
+class YourActivity : AppCompatActivity() {
+    private lateinit var yourButton: Button
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_still_image)
+
+        // 找到按钮
+        yourButton = findViewById(R.id.yourButton)
+
+        // 为按钮设置点击监听器
+        yourButton.setOnClickListener {
+            // 在这里添加您的逻辑
+            // 例如，启动下一个活动
+            val intent = Intent(this, NextActivity::class.java)
+            startActivity(intent)
+        }
+    }
+}
+
 
 //這段程式碼實現了一個文字辨識處理器 TextRecognitionProcessor，用於在圖像中檢測文字。它使用了 Google ML Kit 中的文字辨識功能。
 // 讓我們來看一下主要的功能：
@@ -133,3 +212,4 @@ class TextRecognitionProcessor(
 //onSuccess 方法在文字辨識成功時被調用，它將檢測到的文字添加到圖形覆蓋層（GraphicOverlay）中，並在日誌中輸出一些額外的信息，以便進行測試。
 //onFailure 方法在文字辨識失敗時被調用，它在日誌中輸出相應的錯誤信息。
 //此外，還有一個名為 logExtrasForTesting 的輔助方法，用於在測試期間輸出一些額外的信息。
+

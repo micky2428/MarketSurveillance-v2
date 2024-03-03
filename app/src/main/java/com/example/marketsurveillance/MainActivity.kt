@@ -55,7 +55,7 @@ package com.example.marketsurveillance
 //import com.example.marketsurveillance.login.MainViewModel
 //import com.example.marketsurveillance.ui.theme.IntegrateGoogleDriveTheme
 
-//---CAMERA TEST
+//---文字辨識模型
 //*
 //* Copyright 2020 Google LLC. All rights reserved.
 //*
@@ -73,101 +73,99 @@ package com.example.marketsurveillance
 //*/
 
 //package com.google.mlkit.vision.demo
-
-import android.Manifest
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Bundle
-import android.util.Log
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.example.marketsurveillance.textdetector.ChooserActivity
-
-class EntryChoiceActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_vision_entry_choice) //外觀的檔案
-
-//        findViewById<TextView>(R.id.java_entry_point).setOnClickListener {
-//            val intent = Intent(this@EntryChoiceActivity, ChooserActivity::class.java)
+//
+//import android.Manifest
+//import android.content.Context
+//import android.content.Intent
+//import android.content.pm.PackageManager
+//import android.os.Bundle
+//import android.util.Log
+//import android.widget.TextView
+//import androidx.appcompat.app.AppCompatActivity
+//import androidx.core.app.ActivityCompat
+//import androidx.core.content.ContextCompat
+//import com.example.marketsurveillance.textdetector.ChooserActivity
+//
+//class MainActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.activity_vision_entry_choice) //外觀的檔案
+//
+////        findViewById<TextView>(R.id.java_entry_point).setOnClickListener {
+////            val intent = Intent(this@EntryChoiceActivity, ChooserActivity::class.java)
+////            startActivity(intent)
+////        }
+//
+//        findViewById<TextView>(R.id.kotlin_entry_point).setOnClickListener {
+//            val intent =
+//                Intent(
+//                    this@MainActivity,
+//                    com.example.marketsurveillance.textdetector.ChooserActivity::class.java
+//                )
 //            startActivity(intent)
 //        }
-
-        findViewById<TextView>(R.id.kotlin_entry_point).setOnClickListener {
-            val intent =
-                Intent(
-                    this@EntryChoiceActivity,
-                    com.example.marketsurveillance.textdetector.ChooserActivity::class.java
-                )
-            startActivity(intent)
-        }
-
-        if (!allRuntimePermissionsGranted()) {
-            getRuntimePermissions()
-        }
-    }
-
-    private fun allRuntimePermissionsGranted(): Boolean {
-        for (permission in REQUIRED_RUNTIME_PERMISSIONS) {
-            permission?.let {
-                if (!isPermissionGranted(this, it)) {
-                    return false
-                }
-            }
-        }
-        return true
-    }
-
-    private fun getRuntimePermissions() {
-        val permissionsToRequest = ArrayList<String>()
-        for (permission in REQUIRED_RUNTIME_PERMISSIONS) {
-            permission?.let {
-                if (!isPermissionGranted(this, it)) {
-                    permissionsToRequest.add(permission)
-                }
-            }
-        }
-
-        if (permissionsToRequest.isNotEmpty()) {
-            ActivityCompat.requestPermissions(
-                this,
-                permissionsToRequest.toTypedArray(),
-                PERMISSION_REQUESTS
-            )
-        }
-    }
-
-    private fun isPermissionGranted(context: Context, permission: String): Boolean {
-        if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
-        ) {
-            Log.i(TAG, "Permission granted: $permission")
-            return true
-        }
-        Log.i(TAG, "Permission NOT granted: $permission")
-        return false
-    }
-
-    companion object {
-        private const val TAG = "EntryChoiceActivity"
-        private const val PERMISSION_REQUESTS = 1
-
-        private val REQUIRED_RUNTIME_PERMISSIONS =
-            arrayOf(
-                Manifest.permission.CAMERA,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            )
-    }
-}
+//
+//        if (!allRuntimePermissionsGranted()) {
+//            getRuntimePermissions()
+//        }
+//    }
+//
+//    private fun allRuntimePermissionsGranted(): Boolean {
+//        for (permission in REQUIRED_RUNTIME_PERMISSIONS) {
+//            permission?.let {
+//                if (!isPermissionGranted(this, it)) {
+//                    return false
+//                }
+//            }
+//        }
+//        return true
+//    }
+//
+//    private fun getRuntimePermissions() {
+//        val permissionsToRequest = ArrayList<String>()
+//        for (permission in REQUIRED_RUNTIME_PERMISSIONS) {
+//            permission?.let {
+//                if (!isPermissionGranted(this, it)) {
+//                    permissionsToRequest.add(permission)
+//                }
+//            }
+//        }
+//
+//        if (permissionsToRequest.isNotEmpty()) {
+//            ActivityCompat.requestPermissions(
+//                this,
+//                permissionsToRequest.toTypedArray(),
+//                PERMISSION_REQUESTS
+//            )
+//        }
+//    }
+//
+//    private fun isPermissionGranted(context: Context, permission: String): Boolean {
+//        if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+//        ) {
+//            Log.i(TAG, "Permission granted: $permission")
+//            return true
+//        }
+//        Log.i(TAG, "Permission NOT granted: $permission")
+//        return false
+//    }
+//
+//    companion object {
+//        private const val TAG = "EntryChoiceActivity"
+//        private const val PERMISSION_REQUESTS = 1
+//
+//        private val REQUIRED_RUNTIME_PERMISSIONS =
+//            arrayOf(
+//                Manifest.permission.CAMERA,
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                Manifest.permission.READ_EXTERNAL_STORAGE
+//            )
+//    }
+//}
 
 //這段程式碼是用於檢查和獲取運行時權限的。在 Android 中，某些操作需要在運行時獲得用戶的許可，例如訪問相機、存儲設備、位置等。這段程式碼的作用是檢查應用程式所需的運行時權限是否已經被授予，如果未授予，則向用戶請求這些權限。
-//
 //allRuntimePermissionsGranted() 函數用於檢查是否所有所需的運行時權限都已經被授予。它遍歷 REQUIRED_RUNTIME_PERMISSIONS 列表中的每個權限，並檢查每個權限是否已經被授予。如果任何一個權限未被授予，則返回 false，否則返回 true。
-//
 //getRuntimePermissions() 函數用於獲取那些尚未被授予的運行時權限。它遍歷 REQUIRED_RUNTIME_PERMISSIONS 列表中的每個權限，並將未被授予的權限添加到 permissionsToRequest 列表中。然後，如果 permissionsToRequest 列表不為空，則通過 ActivityCompat.requestPermissions() 方法向用戶請求這些權限。
 
 //
@@ -176,143 +174,143 @@ class EntryChoiceActivity : AppCompatActivity(), ActivityCompat.OnRequestPermiss
 //
 //20240215 有按鍵畫面
 
-//import android.content.Context
-//import android.content.Intent
-//import android.os.Bundle
-//import androidx.activity.ComponentActivity
-//import androidx.activity.compose.setContent
-//import androidx.compose.foundation.layout.Arrangement
-//import androidx.compose.foundation.layout.Box
-//import androidx.compose.foundation.layout.Column
-//import androidx.compose.foundation.layout.fillMaxSize
-//import androidx.compose.foundation.layout.padding
-//import androidx.compose.material.Button
-//import androidx.compose.material.ButtonDefaults
-//import androidx.compose.material.MaterialTheme
-//import androidx.compose.material.Surface
-//import androidx.compose.material.Text
-//import androidx.compose.runtime.Composable
-//import androidx.compose.ui.Alignment
-//import androidx.compose.ui.Modifier
-//import androidx.compose.ui.graphics.Color
-//import androidx.compose.ui.platform.LocalContext
-//import androidx.compose.ui.text.TextStyle
-//import androidx.compose.ui.text.font.FontWeight
-//import androidx.compose.ui.unit.TextUnit
-//import androidx.compose.ui.unit.dp
-//import androidx.compose.ui.unit.sp
-//import androidx.navigation.NavHostController
-//import androidx.navigation.compose.NavHost
-//import androidx.navigation.compose.composable
-//import androidx.navigation.compose.rememberNavController
-//import com.example.marketsurveillance.login.UploadActivity
-//import com.example.marketsurveillance.ui.theme.MarketSurveillanceTheme
-//import dagger.hilt.android.AndroidEntryPoint
-//
-//
-////1130228缺便是
-//@AndroidEntryPoint
-//class MainActivity : ComponentActivity() {
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//
-//        setContent {
-//            MarketSurveillanceTheme {
-//                val navController = rememberNavController()
-//                NavHost(navController, startDestination = "main") {
-//                    composable("main") {
-//                        MainScreen(navController)
-//                    }
-//                    composable("ProductInfo") {
-//                        MarketCheckScreen()
-//                    }
-//                }
-//            }
-//        }
-//    }
-//}
-//
-//@Composable
-//fun MainScreen(navController: NavHostController) {
-////    val activity = LocalContext.current as Activity
-////    val activity = LocalContext.current as AppCompatActivity
-////    val googleDriveLauncher = GoogleDriveLauncher(activity)
-//    val context = LocalContext.current //for UploadActivity
-//    fun startUploadActivity(context: Context) {
-//        val intent = Intent(context, UploadActivity::class.java)
-//        context.startActivity(intent)
-//    }
-//
-//    Surface(
-//        modifier = Modifier.fillMaxSize(),
-//        color = MaterialTheme.colors.background
-//    ) {
-//        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-//            Column(
-//                modifier = Modifier.align(Alignment.Center),
-//                verticalArrangement = Arrangement.Center
-//            ) {
-//                // 添加“市場檢查”按鈕
-//                GreetingButton(
-//                    name = "市場檢查",
-//                    onClick = {
-//                        // 导航到市场检查页面
-//                        navController.navigate("ProductInfo")
-//                    },
-//                    backgroundColor = Color(0xFFFF7F50),
-//                    contentColor = Color.White,
-//                    modifier = Modifier.padding(vertical = 10.dp),
-//                    fontSize = 50.sp
-//                )
-//
-//                // 添加“拍照上傳雲端”按鈕
-//                GreetingButton(
-//
-//                    name = "拍照上傳雲端",
-//                    onClick = {
-//                        startUploadActivity(context)
-//                        // 打開 Google Drive 應用程序
-////                        googleDriveLauncher.launchGoogleDriveWithPermissionCheck()
-////                        navController.navigate("GoogleDrive")
-////                        startForResult.launch(getGoogleSignInClient(ctx).signInIntent)
-//                    },
-//                    backgroundColor = Color(0xFFFFA500),
-//                    contentColor = Color.White,
-//                    modifier = Modifier.padding(vertical = 10.dp),
-//                    fontSize = 50.sp
-//                )
-//            }
-//        }
-//    }
-//}
-//
-//@Composable
-//fun GreetingButton(
-//    name: String,
-//    onClick: () -> Unit,
-//    modifier: Modifier = Modifier,
-//    backgroundColor: Color = Color.Blue,
-//    contentColor: Color = Color.White,
-//    fontSize: TextUnit = 55.sp
-//) {
-//    Button(
-//        onClick = onClick,
-//        colors = ButtonDefaults.buttonColors(
-//            backgroundColor = backgroundColor,
-//            contentColor = contentColor
-//        ),
-//        modifier = modifier
-//    ) {
-//        Text(
-//            text = name,
-//            style = TextStyle(
-//                fontSize = fontSize,
-//                fontWeight = FontWeight.Bold
-//            )
-//        )
-//    }
-//}
+import android.content.Context
+import android.content.Intent
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.marketsurveillance.login.UploadActivity
+import com.example.marketsurveillance.ui.theme.MarketSurveillanceTheme
+import dagger.hilt.android.AndroidEntryPoint
+
+
+//1130228缺便是
+@AndroidEntryPoint
+class MainActivity : ComponentActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContent {
+            MarketSurveillanceTheme {
+                val navController = rememberNavController()
+                NavHost(navController, startDestination = "main") {
+                    composable("main") {
+                        MainScreen(navController)
+                    }
+                    composable("ProductInfo") {
+                        MarketCheckScreen()
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun MainScreen(navController: NavHostController) {
+//    val activity = LocalContext.current as Activity
+//    val activity = LocalContext.current as AppCompatActivity
+//    val googleDriveLauncher = GoogleDriveLauncher(activity)
+    val context = LocalContext.current //for UploadActivity
+    fun startUploadActivity(context: Context) {
+        val intent = Intent(context, UploadActivity::class.java)
+        context.startActivity(intent)
+    }
+
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colors.background
+    ) {
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Column(
+                modifier = Modifier.align(Alignment.Center),
+                verticalArrangement = Arrangement.Center
+            ) {
+                // 添加“市場檢查”按鈕
+                GreetingButton(
+                    name = "市場檢查",
+                    onClick = {
+                        // 导航到市场检查页面
+                        navController.navigate("ProductInfo")
+                    },
+                    backgroundColor = Color(0xFFFF7F50),
+                    contentColor = Color.White,
+                    modifier = Modifier.padding(vertical = 10.dp),
+                    fontSize = 50.sp
+                )
+
+                // 添加“照片上傳雲端”按鈕
+                GreetingButton(
+
+                    name = "照片上傳雲端",
+                    onClick = {
+                        startUploadActivity(context)
+                        // 打開 Google Drive 應用程序
+//                        googleDriveLauncher.launchGoogleDriveWithPermissionCheck()
+//                        navController.navigate("GoogleDrive")
+//                        startForResult.launch(getGoogleSignInClient(ctx).signInIntent)
+                    },
+                    backgroundColor = Color(0xFFFFA500),
+                    contentColor = Color.White,
+                    modifier = Modifier.padding(vertical = 10.dp),
+                    fontSize = 50.sp
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun GreetingButton(
+    name: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    backgroundColor: Color = Color.Blue,
+    contentColor: Color = Color.White,
+    fontSize: TextUnit = 55.sp
+) {
+    Button(
+        onClick = onClick,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = backgroundColor,
+            contentColor = contentColor
+        ),
+        modifier = modifier
+    ) {
+        Text(
+            text = name,
+            style = TextStyle(
+                fontSize = fontSize,
+                fontWeight = FontWeight.Bold
+            )
+        )
+    }
+}
 
 //---
 
