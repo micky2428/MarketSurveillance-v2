@@ -183,6 +183,9 @@ dependencies {
     // To recognize Korean script
     implementation ("com.google.mlkit:text-recognition-korean:16.0.0")
 
+    //辨識後的畫面
+    implementation ("androidx.compose.foundation:foundation:1.0.0")
+
 }
 
 

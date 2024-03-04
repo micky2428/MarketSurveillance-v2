@@ -19,11 +19,7 @@ package com.example.marketsurveillance.textdetector
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
-import com.example.marketsurveillance.R
 import com.example.marketsurveillance.textdetector.preference.PreferenceUtils
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
@@ -51,7 +47,7 @@ class TextRecognitionProcessor(  //連動stillimageactivity
     private val showConfidence: Boolean = PreferenceUtils.shouldShowTextConfidence(context)
 
     //文字辨識輸出結果
-    private var resultText: String = ""
+    var resultText: String = ""
 
 //     定義一個函數用於處理辨識到的結果
 //    private fun handleTextResult(resultText: String) {
@@ -92,14 +88,14 @@ class TextRecognitionProcessor(  //連動stillimageactivity
         resultText = stringBuilder.toString()
     }
 
-    // 启动下一个页面
-//    fun startNextActivity() {
-//        val intent = Intent(context, NextActivity::class.java).apply {
-//            putExtra("resultText", resultText)
-//        }
-//        // 启动下一个页面
-//        context.startActivity(intent)
-//    }
+//     启动下一个页面
+    fun startNextActivity() {
+        val intent = Intent(context, NextActivity::class.java).apply {
+            putExtra("resultText", resultText)
+        }
+        // 启动下一个页面
+        context.startActivity(intent)
+    }
 
 //----
 
@@ -119,6 +115,7 @@ class TextRecognitionProcessor(  //連動stillimageactivity
         )
 
         Log.d(TAG, "Recognized Text: $resultText")
+        startNextActivity() //圖片辨識後馬上跳下一頁
     }
 
 
@@ -183,25 +180,33 @@ class TextRecognitionProcessor(  //連動stillimageactivity
         }
     }
 }
-class YourActivity : AppCompatActivity() {
-    private lateinit var yourButton: Button
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_still_image)
-
-        // 找到按钮
-        yourButton = findViewById(R.id.yourButton)
-
-        // 为按钮设置点击监听器
-        yourButton.setOnClickListener {
-            // 在这里添加您的逻辑
-            // 例如，启动下一个活动
-            val intent = Intent(this, NextActivity::class.java)
-            startActivity(intent)
-        }
-    }
-}
+//class YourActivity : AppCompatActivity() { 本想設定按鍵但失敗
+//    private lateinit var yourButton: Button
+//    private lateinit var textRecognitionProcessor: TextRecognitionProcessor
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.activity_still_image)
+//
+//        // 初始化 textRecognizerOptions，使用默认配置
+//        val textRecognizerOptions = TextRecognizerOptions.DEFAULT_OPTIONS
+//
+//        // 初始化 textRecognitionProcessor
+//        textRecognitionProcessor = TextRecognitionProcessor(this, textRecognizerOptions)
+//
+//        // 找到按钮
+//        yourButton = findViewById(R.id.yourButton)
+//
+//        // 为按钮设置点击监听器
+//        yourButton.setOnClickListener {
+//            // 在这里添加您的逻辑
+//            // 例如，启动下一个活动
+//            val intent = Intent(this, NextActivity::class.java).apply {
+//                putExtra("resultText", textRecognitionProcessor.resultText)
+//            }
+//            startActivity(intent)
+//        }
+//    }
+//}
 
 
 //這段程式碼實現了一個文字辨識處理器 TextRecognitionProcessor，用於在圖像中檢測文字。它使用了 Google ML Kit 中的文字辨識功能。

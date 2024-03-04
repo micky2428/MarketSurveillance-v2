@@ -22,7 +22,7 @@
     <string name="download_error" translatable="false">Download error</string>
     <string name="start_over" translatable="false">Start over</string>
     <string name="menu_item_settings" translatable="false">Settings</string>
-    <string name="select_image" translatable="false">Select image</string>
+    <string name="select_image" translatable="false">2:Select image</string>
     <string name="custom_object_detection" translatable="false">Custom Object Detector</string>
 
     <!-- Settings related strings. -->
@@ -37,7 +37,7 @@
     <string name="pref_category_automl" translatable="false">AutoML Image Labeling</string>
     <string name="pref_category_pose_detection" translatable="false">Pose Detection</string>
     <string name="pref_category_segmentation" translatable="false">Selfie Segmentation</string>
-    <string name="pref_category_text_recognition" translatable="false">Text Recognition</string>
+    <string name="pref_category_text_recognition" translatable="false">1:Text Recognition</string>
     <string name="pref_category_barcode_scanning" translatable="false">Barcode Scanning</string>
 
     <!-- Strings for camera settings. -->
