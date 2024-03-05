@@ -186,8 +186,8 @@ class StillImageActivity : AppCompatActivity() {
 //        options.add(CUSTOM_AUTOML_LABELING)
 //        options.add(POSE_DETECTION)
 //        options.add(SELFIE_SEGMENTATION)
-        options.add(TEXT_RECOGNITION_LATIN)
         options.add(TEXT_RECOGNITION_CHINESE)
+        options.add(TEXT_RECOGNITION_LATIN)
 //        options.add(TEXT_RECOGNITION_DEVANAGARI)
         options.add(TEXT_RECOGNITION_JAPANESE)
         options.add(TEXT_RECOGNITION_KOREAN)
@@ -407,11 +407,13 @@ class StillImageActivity : AppCompatActivity() {
 //                    imageProcessor = FaceDetectorProcessor(this, faceDetectorOptions)
 //                }
 //                BARCODE_SCANNING -> imageProcessor = BarcodeScannerProcessor(this, zoomCallback = null)
-                TEXT_RECOGNITION_LATIN ->
-                    imageProcessor = TextRecognitionProcessor(this, TextRecognizerOptions.Builder().build())
                 TEXT_RECOGNITION_CHINESE ->
                     imageProcessor =
                         TextRecognitionProcessor(this, ChineseTextRecognizerOptions.Builder().build())
+
+                TEXT_RECOGNITION_LATIN ->
+                    imageProcessor = TextRecognitionProcessor(this, TextRecognizerOptions.Builder().build())
+
 //                TEXT_RECOGNITION_DEVANAGARI ->
 //                    imageProcessor =
 //                        TextRecognitionProcessor(this, DevanagariTextRecognizerOptions.Builder().build())
@@ -490,8 +492,8 @@ class StillImageActivity : AppCompatActivity() {
 //        private const val CUSTOM_AUTOML_OBJECT_DETECTION = "Custom AutoML Object Detection (Flower)"
 //        private const val FACE_DETECTION = "Face Detection"
 //        private const val BARCODE_SCANNING = "Barcode Scanning"
-        private const val TEXT_RECOGNITION_LATIN = "Text Recognition Latin(拉丁文)"
         private const val TEXT_RECOGNITION_CHINESE = "Text Recognition Chinese(中文)"
+        private const val TEXT_RECOGNITION_LATIN = "Text Recognition Latin(拉丁文)"
 //        private const val TEXT_RECOGNITION_DEVANAGARI = "Text Recognition Devanagari"
         private const val TEXT_RECOGNITION_JAPANESE = "Text Recognition Japanese(日文)"
         private const val TEXT_RECOGNITION_KOREAN = "Text Recognition Korean(韓文)"

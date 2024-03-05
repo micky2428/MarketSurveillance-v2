@@ -106,8 +106,8 @@ package com.example.marketsurveillance
 //            startActivity(intent)
 //        }
 //
-//        if (!allRuntimePermissionsGranted()) {
-//            getRuntimePermissions()
+//        if (sio!allRuntimePermissionsGranted()) {
+////            getRuntimePermisns()
 //        }
 //    }
 //
@@ -174,9 +174,12 @@ package com.example.marketsurveillance
 //
 //20240215 有按鍵畫面
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -199,6 +202,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -215,6 +220,15 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // 检查和请求权限
+        if (!allRuntimePermissionsGranted()) {
+            getRuntimePermissions()
+        } else {
+            setContent()
+        }
+    }
+
+    private fun setContent() {
         setContent {
             MarketSurveillanceTheme {
                 val navController = rememberNavController()
@@ -229,7 +243,78 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    private fun allRuntimePermissionsGranted(): Boolean {
+        for (permission in REQUIRED_RUNTIME_PERMISSIONS) {
+            permission?.let {
+                if (!isPermissionGranted(this, it)) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    private fun getRuntimePermissions() {
+        val permissionsToRequest = ArrayList<String>()
+        for (permission in REQUIRED_RUNTIME_PERMISSIONS) {
+            permission?.let {
+                if (!isPermissionGranted(this, it)) {
+                    permissionsToRequest.add(permission)
+                }
+            }
+        }
+
+        if (permissionsToRequest.isNotEmpty()) {
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsToRequest.toTypedArray(),
+                PERMISSION_REQUESTS
+            )
+        }
+    }
+
+    private fun isPermissionGranted(context: Context, permission: String): Boolean {
+        if (ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+        ) {
+            Log.i(TAG, "Permission granted: $permission")
+            return true
+        }
+        Log.i(TAG, "Permission NOT granted: $permission")
+        return false
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
+        private const val PERMISSION_REQUESTS = 1
+
+        private val REQUIRED_RUNTIME_PERMISSIONS =
+            arrayOf(
+                Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+    }
 }
+//原本mainactivity內容
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//
+//        setContent {
+//            MarketSurveillanceTheme {
+//                val navController = rememberNavController()
+//                NavHost(navController, startDestination = "main") {
+//                    composable("main") {
+//                        MainScreen(navController)
+//                    }
+//                    composable("ProductInfo") {
+//                        MarketCheckScreen()
+//                    }
+//                }
+//            }
+//        }
+//    }
+//}
 
 @Composable
 fun MainScreen(navController: NavHostController) {
@@ -270,10 +355,6 @@ fun MainScreen(navController: NavHostController) {
                     name = "照片上傳雲端",
                     onClick = {
                         startUploadActivity(context)
-                        // 打開 Google Drive 應用程序
-//                        googleDriveLauncher.launchGoogleDriveWithPermissionCheck()
-//                        navController.navigate("GoogleDrive")
-//                        startForResult.launch(getGoogleSignInClient(ctx).signInIntent)
                     },
                     backgroundColor = Color(0xFFFFA500),
                     contentColor = Color.White,
@@ -309,8 +390,9 @@ fun GreetingButton(
                 fontWeight = FontWeight.Bold
             )
         )
+        }
     }
-}
+
 
 //---
 
