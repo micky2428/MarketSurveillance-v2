@@ -151,7 +151,7 @@ fun MarketCheckScreen() {
     var producerAddress by remember { mutableStateOf(TextFieldValue()) }
     var productSourceCountry by remember { mutableStateOf(TextFieldValue()) }
     var bsmiNumber by remember { mutableStateOf(TextFieldValue()) }
-    var selectedName by remember { mutableStateOf("") }
+    var namePickerSelection by remember { mutableStateOf("") }
 //    文字辨識輸出
 //    var recognizedText by remember { mutableStateOf("") }
 
@@ -167,17 +167,17 @@ fun MarketCheckScreen() {
 
         val params = JSONObject().apply {
             put("specDate", specDate.text)
-            put("namepicker", selectedName)
-            put("productName", productName)
-            put("productNumber", productNumber)
-            put("productBatch", productBatch)
-            put("producerName", producerName)
-            put("bsmiNumber", bsmiNumber)
-            put("productSourceCountry", productSourceCountry)
-            put("productSpec", productSpec)
-            put("productBrand", productBrand)
-            put("productDate", productDate)
-            put("producerAddress", producerAddress)
+            put("namepicker", namePickerSelection)
+            put("productName", productName.text)
+            put("productNumber", productNumber.text)
+            put("productBatch", productBatch.text)
+            put("producerName", producerName.text)
+            put("bsmiNumber", bsmiNumber.text)
+            put("productSourceCountry", productSourceCountry.text)
+            put("productSpec", productSpec.text)
+            put("productBrand", productBrand.text)
+            put("productDate", productDate.text)
+            put("producerAddress", producerAddress.text)
 
 
 
@@ -231,7 +231,8 @@ fun MarketCheckScreen() {
 //                }
 //            )}
                 // 人名選擇器
-                item { NamePicker(onNameSelected = { selectedName = it }) }
+                item { NamePicker(onNameSelected = { selectedName ->
+                    namePickerSelection = selectedName }) }
                 //商品資訊
                 item {
                     TextField(
