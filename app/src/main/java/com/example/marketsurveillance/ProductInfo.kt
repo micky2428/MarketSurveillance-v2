@@ -10,7 +10,6 @@ package com.example.marketsurveillance
 //設定日期
 //等調好日期選擇器的長相再用
 
-import android.content.Context
 import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -42,9 +41,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.marketsurveillance.camera.CameraActivity
 import com.example.marketsurveillance.textdetector.ChooserActivity
-import com.google.mlkit.vision.text.TextRecognizerOptionsInterface
 
 
 //人名選單
@@ -91,11 +88,11 @@ fun NamePicker() {
         }
     }
 }
-
-fun startCameraActivity(context: Context) {
-    val intent = Intent(context, CameraActivity::class.java)
-    context.startActivity(intent)
-}
+//單獨相機功能
+//fun startCameraActivity(context: Context) {
+//    val intent = Intent(context, CameraActivity::class.java)
+//    context.startActivity(intent)
+//}
 
 @Composable
 fun MarketCheckScreen() {

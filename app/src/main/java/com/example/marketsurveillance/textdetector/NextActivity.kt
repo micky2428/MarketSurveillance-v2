@@ -9,8 +9,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,16 +26,22 @@ import androidx.compose.material.Button
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -72,6 +81,51 @@ import java.util.regex.Pattern
 //        )
 //    }
 //}
+
+@Composable
+fun NamePicker() {
+    val nameOptions = listOf("李O昌", "蔡O成", "許O進", "周O瑜", "梁O婷", "潘O婷")
+    var selectedName by remember { mutableStateOf(nameOptions[0]) }
+    var expandedName by remember { mutableStateOf(false) }
+    val density = LocalDensity.current
+    val dp = with(density) { 16.toDp() }
+
+
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            text = "檢查人員:",
+            modifier = Modifier.padding(dp)
+        )
+        Box(
+            modifier = Modifier
+                .weight(1f)
+                .clickable(onClick = { expandedName = true })
+                .background(Color.Gray)
+        ) {
+            Text(
+                text = selectedName,
+                modifier = Modifier.padding(dp)
+            )
+            DropdownMenu(
+                expanded = expandedName,
+                onDismissRequest = { expandedName = false }
+            ) {
+                nameOptions.map { name ->
+                    DropdownMenuItem(
+                        onClick = {
+                            selectedName = name
+                            expandedName = false
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        text = { Text(text = name) }
+                    )
+
+                }
+            }
+        }
+    }
+}
+
 class NextActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,6 +177,7 @@ fun ShowResultText(
     var producerNameText by remember { mutableStateOf<String>("") }
     var bsmiNumberText by remember { mutableStateOf<String>("") }
     var productSourceCountryText by remember { mutableStateOf<String>("") }
+    var specDate by remember { mutableStateOf(TextFieldValue()) }
 
 
     LaunchedEffect(true) {
@@ -141,6 +196,12 @@ fun ShowResultText(
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
+        TextField(
+            value = specDate,
+            onValueChange = { specDate = it },
+            label = { Text("檢查日期(Ex:1130101)") }
+        )
+        NamePicker()
         TextField(
             value = productNameText,
             onValueChange = { productNameText = it },
@@ -256,7 +317,7 @@ fun ShowResultText(
 
 
 private fun extractProductName(resultText: String): String{
-    val pattern = Pattern.compile("(品名)|(.*名.*)|(.*系.*)|(.*玩具.*)")
+    val pattern = Pattern.compile("(.*品名.*\\S)|(.*名.*\\S)|(.*系.*)|(.*玩具.*)")
     val matcher = pattern.matcher(resultText)
     return if (matcher.find()) {
         // 匹配到了 "品名" 或 ".名"，则返回匹配到的文本
@@ -268,7 +329,7 @@ private fun extractProductName(resultText: String): String{
 }
 
 private fun extractproductNumber(resultText: String): String {
-    val pattern = Pattern.compile("(型號)")
+    val pattern = Pattern.compile("(.*型號.*)")
     val matcher = pattern.matcher(resultText)
     return if (matcher.find()) {
         // 匹配到了 "品名" 或 ".名"，则返回匹配到的文本
@@ -291,16 +352,47 @@ private fun extractproductBatch(resultText: String): String {
     }
 }
 
+//private fun extractproducerName(resultText: String): String {
+//    val pattern = Pattern.compile("(進口商.*)|(.*製造商.*)|(.*製商.*)|(委製商.*)")
+//    val matcher = pattern.matcher(resultText)
+//    return if (matcher.find()) {
+//        // 匹配到了 "品名" 或 ".名"，则返回匹配到的文本
+//        matcher.group()
+//    } else {
+//        // 如果没有匹配到，则返回空字符串
+//        ""
+//    }
+//}
 private fun extractproducerName(resultText: String): String {
-    val pattern = Pattern.compile("(進口商.*)|(.*製造商.*)|(.*製商.*)|(委製商.*)")
+    val pattern = Pattern.compile("(.*進口商.*\\S)|(.*製造商.*\\S)|(.*製商.*\\S)|(.*委製商.*\\S)")
     val matcher = pattern.matcher(resultText)
-    return if (matcher.find()) {
-        // 匹配到了 "品名" 或 ".名"，则返回匹配到的文本
-        matcher.group()
-    } else {
-        // 如果没有匹配到，则返回空字符串
-        ""
+
+    var bestMatch = ""
+    var foundImporter = false
+
+    while (matcher.find()) {
+        val match = matcher.group()
+        if (match.startsWith("進口商") && !foundImporter) {
+            bestMatch = match
+            foundImporter = true
+            break // 找到進口商就退出循環
+        } else if (match.contains("委製商") && !foundImporter) {
+            bestMatch = match
+        } else if (match.contains("委製商") && foundImporter && !bestMatch.contains("委製商")) {
+            bestMatch = match
+        }
+        else if (match.contains("製造商") && !foundImporter) {
+            bestMatch = match
+        } else if (match.contains("製造商") && foundImporter && !bestMatch.contains("製造商")) {
+            bestMatch = match
+        } else if (match.contains("製商") && !foundImporter) {
+            bestMatch = match
+        } else if (match.contains("製商") && foundImporter && !bestMatch.contains("製商")) {
+            bestMatch = match
+        }
     }
+
+    return bestMatch
 }
 
 private fun extractbsmiNumber(resultText: String): String {
@@ -316,7 +408,7 @@ private fun extractbsmiNumber(resultText: String): String {
 }
 
 private fun extractproductSourceCountry(resultText: String): String{
-    val pattern = Pattern.compile("(中國)|(.*地:.*)|(中國大陸)|(台灣)|(臺灣)|(越南)|(柬埔寨)|(產地)")
+    val pattern = Pattern.compile("(中國)|(.*地:.*\\S)|(中國大陸)|(台灣)|(臺灣)|(越南)|(柬埔寨)|(產地:.*\\S)")
     val matcher = pattern.matcher(resultText)
     return if (matcher.find()) {
         // 匹配到了 "品名" 或 ".名"，则返回匹配到的文本

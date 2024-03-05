@@ -272,6 +272,10 @@ class MainActivity : ComponentActivity() {
                 PERMISSION_REQUESTS
             )
         }
+        else {
+        // 權限已經全部被授予，設置主畫面
+        setContent()
+        }
     }
 
     private fun isPermissionGranted(context: Context, permission: String): Boolean {
