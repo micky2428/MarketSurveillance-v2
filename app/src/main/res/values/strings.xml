@@ -22,7 +22,7 @@
     <string name="download_error" translatable="false">Download error</string>
     <string name="start_over" translatable="false">Start over</string>
     <string name="menu_item_settings" translatable="false">Settings</string>
-    <string name="select_image" translatable="false">Select image(如要換模式，要先選模式)</string>
+    <string name="select_image" translatable="false">Select image(若要用中文以外的模式，請先選模式)</string>
     <string name="custom_object_detection" translatable="false">Custom Object Detector</string>
 
     <!-- Settings related strings. -->

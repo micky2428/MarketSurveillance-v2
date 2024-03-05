@@ -186,6 +186,9 @@ dependencies {
     //辨識後的畫面
     implementation ("androidx.compose.foundation:foundation:1.0.0")
 
+    //傳送資料至google sheet
+    implementation("com.android.volley:volley:1.2.1")
+
 }
 
 

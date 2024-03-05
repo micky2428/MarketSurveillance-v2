@@ -26,7 +26,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,18 +40,64 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.example.marketsurveillance.textdetector.ChooserActivity
-
+import org.json.JSONObject
 
 //人名選單
+//@Composable
+//fun NamePicker() {
+//    val nameOptions = listOf("李O昌", "蔡O成", "許O進", "周O瑜", "梁O婷", "潘O婷")
+//    var selectedName by remember { mutableStateOf(nameOptions[0]) }
+//    var expandedName by remember { mutableStateOf(false) }
+//    val density = LocalDensity.current
+//    val dp = with(density) { 16.toDp() }
+//
+//
+//    Row(verticalAlignment = Alignment.CenterVertically) {
+//        Text(
+//            text = "檢查人員:",
+//            modifier = Modifier.padding(dp)
+//        )
+//        Box(
+//            modifier = Modifier
+//                .weight(1f)
+//                .clickable(onClick = { expandedName = true })
+//                .background(Color.Gray)
+//        ) {
+//            Text(
+//                text = selectedName,
+//                modifier = Modifier.padding(dp)
+//            )
+//            DropdownMenu(
+//                expanded = expandedName,
+//                onDismissRequest = { expandedName = false }
+//            ) {
+//                nameOptions.map { name ->
+//                    DropdownMenuItem(
+//                        onClick = {
+//                            selectedName = name
+//                            expandedName = false
+//                        },
+//                        modifier = Modifier.fillMaxWidth(),
+//                        text = { Text(text = name) }
+//                    )
+//
+//                }
+//            }
+//        }
+//    }
+//}
 @Composable
-fun NamePicker() {
+fun NamePicker(onNameSelected: (String) -> Unit) {
     val nameOptions = listOf("李O昌", "蔡O成", "許O進", "周O瑜", "梁O婷", "潘O婷")
     var selectedName by remember { mutableStateOf(nameOptions[0]) }
     var expandedName by remember { mutableStateOf(false) }
     val density = LocalDensity.current
     val dp = with(density) { 16.toDp() }
-
 
     Row(verticalAlignment = Alignment.CenterVertically) {
         Text(
@@ -69,7 +114,7 @@ fun NamePicker() {
                 text = selectedName,
                 modifier = Modifier.padding(dp)
             )
-            DropdownMenu(
+            androidx.compose.material.DropdownMenu(
                 expanded = expandedName,
                 onDismissRequest = { expandedName = false }
             ) {
@@ -78,11 +123,11 @@ fun NamePicker() {
                         onClick = {
                             selectedName = name
                             expandedName = false
+                            onNameSelected(name)
                         },
                         modifier = Modifier.fillMaxWidth(),
                         text = { Text(text = name) }
                     )
-
                 }
             }
         }
@@ -106,7 +151,7 @@ fun MarketCheckScreen() {
     var producerAddress by remember { mutableStateOf(TextFieldValue()) }
     var productSourceCountry by remember { mutableStateOf(TextFieldValue()) }
     var bsmiNumber by remember { mutableStateOf(TextFieldValue()) }
-
+    var selectedName by remember { mutableStateOf("") }
 //    文字辨識輸出
 //    var recognizedText by remember { mutableStateOf("") }
 
@@ -116,6 +161,46 @@ fun MarketCheckScreen() {
 //    val dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy")
         var specDate by remember { mutableStateOf(TextFieldValue()) }
         val context = LocalContext.current
+
+    fun sendDataToGoogleSheets() {
+        val url = "https://script.google.com/macros/s/AKfycbwwTpaELQqFEQXr9Iel5UCOqeeQVk0iplDbFA8aD7t2mv_2wmHBabtgSlgg6l8DvC_flg/exec"
+
+        val params = JSONObject().apply {
+            put("specDate", specDate.text)
+            put("namepicker", selectedName)
+            put("productName", productName)
+            put("productNumber", productNumber)
+            put("productBatch", productBatch)
+            put("producerName", producerName)
+            put("bsmiNumber", bsmiNumber)
+            put("productSourceCountry", productSourceCountry)
+            put("productSpec", productSpec)
+            put("productBrand", productBrand)
+            put("productDate", productDate)
+            put("producerAddress", producerAddress)
+
+
+
+        }
+
+        val request = JsonObjectRequest(
+            Request.Method.POST,
+            url,
+            params,
+            { response ->
+                // 處理成功響應
+                // 在這裡更新UI或顯示成功消息
+            },
+            { error ->
+                // 處理錯誤響應
+                // 在這裡顯示錯誤消息或記錄錯誤
+            }
+        )
+
+        // 將請求添加到 RequestQueue
+        val queue: RequestQueue = Volley.newRequestQueue(context)
+        queue.add(request)
+        }
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.background
@@ -146,7 +231,7 @@ fun MarketCheckScreen() {
 //                }
 //            )}
                 // 人名選擇器
-                item { NamePicker() }
+                item { NamePicker(onNameSelected = { selectedName = it }) }
                 //商品資訊
                 item {
                     TextField(
@@ -239,6 +324,7 @@ fun MarketCheckScreen() {
                         Button(
                             onClick = {
                                 // 处理提交商品信息的逻辑
+                                sendDataToGoogleSheets()
                             },
                             modifier = Modifier.weight(1f)
                         ) {
@@ -265,6 +351,7 @@ fun MarketCheckScreen() {
             }
         }
     }
+
 
 
 
