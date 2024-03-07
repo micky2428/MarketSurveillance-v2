@@ -53,50 +53,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-//人名選單
-//@Composable
-//fun NamePicker() {
-//    val nameOptions = listOf("李OO", "蔡OO", "許OO", "周OO", "梁OO", "潘OO")
-//    var selectedName by remember { mutableStateOf(nameOptions[0]) }
-//    var expandedName by remember { mutableStateOf(false) }
-//    val density = LocalDensity.current
-//    val dp = with(density) { 16.toDp() }
-//
-//
-//    Row(verticalAlignment = Alignment.CenterVertically) {
-//        Text(
-//            text = "檢查人員:",
-//            modifier = Modifier.padding(dp)
-//        )
-//        Box(
-//            modifier = Modifier
-//                .weight(1f)
-//                .clickable(onClick = { expandedName = true })
-//                .background(Color.Gray)
-//        ) {
-//            Text(
-//                text = selectedName,
-//                modifier = Modifier.padding(dp)
-//            )
-//            DropdownMenu(
-//                expanded = expandedName,
-//                onDismissRequest = { expandedName = false }
-//            ) {
-//                nameOptions.map { name ->
-//                    DropdownMenuItem(
-//                        onClick = {
-//                            selectedName = name
-//                            expandedName = false
-//                        },
-//                        modifier = Modifier.fillMaxWidth(),
-//                        text = { Text(text = name) }
-//                    )
-//
-//                }
-//            }
-//        }
-//    }
-//}
+
 @Composable
 fun NamePicker(onNameSelected: (String) -> Unit) {
     val nameOptions = listOf("請選擇人員","李O昌", "蔡O成", "許O進", "周O瑜", "梁O婷", "潘O婷")
