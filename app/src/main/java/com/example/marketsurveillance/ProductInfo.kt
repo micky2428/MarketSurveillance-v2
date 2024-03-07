@@ -14,6 +14,7 @@ import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,9 +24,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHost
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,6 +49,9 @@ import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.marketsurveillance.textdetector.ChooserActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 //人名選單
@@ -93,7 +100,7 @@ import org.json.JSONObject
 //}
 @Composable
 fun NamePicker(onNameSelected: (String) -> Unit) {
-    val nameOptions = listOf("李O昌", "蔡O成", "許O進", "周O瑜", "梁O婷", "潘O婷")
+    val nameOptions = listOf("請選擇人員","李O昌", "蔡O成", "許O進", "周O瑜", "梁O婷", "潘O婷")
     var selectedName by remember { mutableStateOf(nameOptions[0]) }
     var expandedName by remember { mutableStateOf(false) }
     val density = LocalDensity.current
@@ -133,11 +140,6 @@ fun NamePicker(onNameSelected: (String) -> Unit) {
         }
     }
 }
-//單獨相機功能
-//fun startCameraActivity(context: Context) {
-//    val intent = Intent(context, CameraActivity::class.java)
-//    context.startActivity(intent)
-//}
 
 @Composable
 fun MarketCheckScreen() {
@@ -152,20 +154,23 @@ fun MarketCheckScreen() {
     var productSourceCountry by remember { mutableStateOf(TextFieldValue()) }
     var bsmiNumber by remember { mutableStateOf(TextFieldValue()) }
     var namePickerSelection by remember { mutableStateOf("") }
-//    文字辨識輸出
-//    var recognizedText by remember { mutableStateOf("") }
+
+    //送出成功
+    val scaffoldState = rememberScaffoldState()
+    val snackbarHostState = scaffoldState.snackbarHostState
+
 
 
 
 //設定時間
-//    val dateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy")
         var specDate by remember { mutableStateOf(TextFieldValue()) }
         val context = LocalContext.current
 
     fun sendDataToGoogleSheets() {
-        val url = "https://script.google.com/macros/s/AKfycbwwTpaELQqFEQXr9Iel5UCOqeeQVk0iplDbFA8aD7t2mv_2wmHBabtgSlgg6l8DvC_flg/exec"
+        val url = "https://script.google.com/macros/s/AKfycbwYceYMcSAecFIenliXgZRcz6DVh5VelLqJ-xLJToERr71x9DKosKd-0ke94FHxadw_Cw/exec"
 
         val params = JSONObject().apply {
+            put("source", "ProductInfo")
             put("specDate", specDate.text)
             put("namepicker", namePickerSelection)
             put("productName", productName.text)
@@ -179,9 +184,8 @@ fun MarketCheckScreen() {
             put("productDate", productDate.text)
             put("producerAddress", producerAddress.text)
 
-
-
         }
+
 
         val request = JsonObjectRequest(
             Request.Method.POST,
@@ -196,16 +200,29 @@ fun MarketCheckScreen() {
                 // 在這裡顯示錯誤消息或記錄錯誤
             }
         )
-
-        // 將請求添加到 RequestQueue
+        request.setShouldCache(false)
+        // Add the request to the RequestQueue
         val queue: RequestQueue = Volley.newRequestQueue(context)
         queue.add(request)
+
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        coroutineScope.launch {
+            snackbarHostState.showSnackbar("送出成功")
         }
+    }
+
+        // 將請求添加到 RequestQueue
+//        val queue: RequestQueue = Volley.newRequestQueue(context)
+//        queue.add(request)
+//        }
+    Scaffold(
+        scaffoldState = scaffoldState,
+        content = { contentPadding ->
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colors.background
         ) {
-            LazyColumn(modifier = Modifier.padding(16.dp)) {
+            LazyColumn(contentPadding = PaddingValues(16.dp)) {
                 item {
                     Text(text = "請輸入合格的商品資訊", fontSize = 30.sp)
                 }
@@ -351,7 +368,10 @@ fun MarketCheckScreen() {
                 }
             }
         }
-    }
+    },
+                snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    )
+}
 
 
 

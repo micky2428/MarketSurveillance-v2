@@ -3,12 +3,9 @@ package com.example.marketsurveillance.textdetector
 //import androidx.compose.ui.platform.ClipboardManager
 //傳送資料到google sheets
 //上傳資料到google sheet
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
@@ -26,9 +23,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.DropdownMenu
+import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHost
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,13 +44,15 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.example.marketsurveillance.MainActivity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.util.regex.Pattern
 
@@ -101,7 +103,7 @@ import java.util.regex.Pattern
 
 @Composable
 fun NamePicker(onNameSelected: (String) -> Unit) {
-    val nameOptions = listOf("李O昌", "蔡O成", "許O進", "周O瑜", "梁O婷", "潘O婷")
+    val nameOptions = listOf("請選擇人員","李O昌", "蔡O成", "許O進", "周O瑜", "梁O婷", "潘O婷")
     var selectedName by remember { mutableStateOf(nameOptions[0]) }
     var expandedName by remember { mutableStateOf(false) }
     val density = LocalDensity.current
@@ -149,6 +151,7 @@ class NextActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val resultText = intent.getStringExtra("resultText")
 
+        val allText = extractallText(resultText ?: "")
         val productNameText = extractProductName(resultText ?: "")
         val productNumberText = extractproductNumber(resultText ?: "")
         val productBatchText = extractproductBatch(resultText ?: "")
@@ -166,7 +169,7 @@ class NextActivity : AppCompatActivity() {
                             producerName = producerNameText,
                             bsmiNumber = bsmiNumberText,
                             productSourceCountry = productSourceCountryText,
-                            resultText = resultText ?: "",
+                            allwords = allText,
                             namepicker = "", // 提供空字串
                             specdate = "",
                             context = context
@@ -187,7 +190,7 @@ fun ShowResultText(
     producerName: String,
     bsmiNumber: String,
     productSourceCountry: String,
-    resultText: String,
+    allwords: String,
     namepicker: String,
     specdate: String,
     context: Context,
@@ -201,13 +204,20 @@ fun ShowResultText(
     var productSourceCountryText by remember { mutableStateOf<String>("") }
     var specdate by remember { mutableStateOf(TextFieldValue()) }
     var namePickerSelection by remember { mutableStateOf("") }
+    var allText by remember { mutableStateOf(allwords) }
+
+
+    //送出成功
+    val scaffoldState = rememberScaffoldState()
+    val snackbarHostState = scaffoldState.snackbarHostState
 
 
     fun sendDataToGoogleSheets() {
-        val url =
-            "https://script.google.com/macros/s/AKfycbwwTpaELQqFEQXr9Iel5UCOqeeQVk0iplDbFA8aD7t2mv_2wmHBabtgSlgg6l8DvC_flg/exec"
+        val url = "https://script.google.com/macros/s/AKfycbwYceYMcSAecFIenliXgZRcz6DVh5VelLqJ-xLJToERr71x9DKosKd-0ke94FHxadw_Cw/exec"
 
+//        val formattedResultText = resultText.replace("\n", " ") //"\n", "\\n"無法解決原文沒有上傳sheet的問題
         val params = JSONObject().apply {
+            put("source", "NextActivity")
             put("productName", productNameText)
             put("productNumber", productNumberText)
             put("productBatch", productBatchText)
@@ -216,6 +226,7 @@ fun ShowResultText(
             put("productSourceCountry", productSourceCountryText)
             put("specDate", specdate.text)
             put("namepicker", namePickerSelection)
+            put("allwords", allText)
         }
 
         val request = JsonObjectRequest(
@@ -232,159 +243,186 @@ fun ShowResultText(
                 // You can show an error message or log the error here
             }
         )
-
+        request.setShouldCache(false)
         // Add the request to the RequestQueue
         val queue: RequestQueue = Volley.newRequestQueue(context)
         queue.add(request)
+
+        val coroutineScope = CoroutineScope(Dispatchers.Main)
+        coroutineScope.launch {
+            snackbarHostState.showSnackbar("送出成功")
+        }
     }
 
 
 
-        LaunchedEffect(true) {
-            productNameText = productName
-            productNumberText = productNumber
-            productBatchText = productBatch
-            producerNameText = producerName
-            bsmiNumberText = bsmiNumber
-            productSourceCountryText = productSourceCountry
+    LaunchedEffect(true) {
+        productNameText = productName
+        productNumberText = productNumber
+        productBatchText = productBatch
+        producerNameText = producerName
+        bsmiNumberText = bsmiNumber
+        productSourceCountryText = productSourceCountry
+        val formattedAllText = allwords.replace("\n", " ")
+        allText = formattedAllText
 
-
-        }
-
-
+    }
+    Scaffold(
+        scaffoldState = scaffoldState,
+        content = { contentPadding ->
+            // 這裡是您原有的 Column 內容
 // 包裹 Column 在 ScrollView 中
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp)
-        ) {
-            TextField(
-                value = specdate,
-                onValueChange = { specdate = it },
-                label = { Text("檢查日期(Ex:1130101)") }
-            )
-            NamePicker(
-                onNameSelected = { selectedName ->
-                    namePickerSelection = selectedName
-                }
-//            nameOptions = listOf("李O昌", "蔡O成", "許O進", "周O瑜", "梁O婷", "潘O婷"),
-//            onNameSelected = { selectedName ->
-//                namePickerSelection = selectedName
-//            }
-            )
-            TextField(
-                value = productNameText,
-                onValueChange = { productNameText = it },
-                label = { Text("品名") },
-                modifier = Modifier.fillMaxWidth(), // 添加必要的修飾符
-                textStyle = TextStyle.Default, // 添加必要的樣式
-                singleLine = true, // 確保文本框只有一行
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Text // 指定鍵盤類型為文本
-                )
-            )
-            TextField(
-                value = productNumberText,
-                onValueChange = { productNumberText = it },
-                label = { Text("型號") },
-                modifier = Modifier.fillMaxWidth(), // 添加必要的修飾符
-                textStyle = TextStyle.Default, // 添加必要的樣式
-                singleLine = true, // 確保文本框只有一行
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Text // 指定鍵盤類型為文本
-                )
-            )
-            TextField(
-                value = productBatchText,
-                onValueChange = { productBatchText = it },
-                label = { Text("批號") },
-                modifier = Modifier.fillMaxWidth(), // 添加必要的修飾符
-                textStyle = TextStyle.Default, // 添加必要的樣式
-                singleLine = true, // 確保文本框只有一行
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Text // 指定鍵盤類型為文本
-                )
-            )
-            TextField(
-                value = producerNameText,
-                onValueChange = { producerNameText = it },
-                label = { Text("製造商/進口商") },
-                modifier = Modifier.fillMaxWidth(), // 添加必要的修飾符
-                textStyle = TextStyle.Default, // 添加必要的樣式
-                singleLine = true, // 確保文本框只有一行
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Text // 指定鍵盤類型為文本
-                )
-            )
-            TextField(
-                value = bsmiNumberText,
-                onValueChange = { bsmiNumberText = it },
-                label = { Text("商品檢驗標識") },
-                modifier = Modifier.fillMaxWidth(), // 添加必要的修飾符
-                textStyle = TextStyle.Default, // 添加必要的樣式
-                singleLine = true, // 確保文本框只有一行
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Text // 指定鍵盤類型為文本
-                )
-            )
-            TextField(
-                value = productSourceCountryText,
-                onValueChange = { productSourceCountryText = it },
-                label = { Text("國家") },
-                modifier = Modifier.fillMaxWidth(), // 添加必要的修飾符
-                textStyle = TextStyle.Default, // 添加必要的樣式
-                singleLine = true, // 確保文本框只有一行
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = KeyboardType.Text // 指定鍵盤類型為文本
-                )
-            )
-
-
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "原文: $resultText",
-                fontSize = 16.sp,
-                textAlign = TextAlign.Start,
-                modifier = Modifier.clickable {
-                    val clipboard =
-                        context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                    val clip = ClipData.newPlainText("Copied Text", resultText)
-                    clipboard.setPrimaryClip(clip)
-                    Toast.makeText(context, "Text Copied", Toast.LENGTH_SHORT).show()
-                }
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = {
-
-                    sendDataToGoogleSheets()
-                },
-                modifier = Modifier.fillMaxWidth()
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(contentPadding)
+                    .padding(16.dp)
             ) {
-                Text("提交")
+                TextField(
+                    value = specdate,
+                    onValueChange = { specdate = it },
+                    label = { Text("檢查日期(Ex:1130101)") }
+                )
+                NamePicker(
+                    onNameSelected = { selectedName ->
+                        namePickerSelection = selectedName
+                    }
+
+                )
+                TextField(
+                    value = productNameText,
+                    onValueChange = { productNameText = it },
+                    label = { Text("品名") },
+                    modifier = Modifier.fillMaxWidth(), // 添加必要的修飾符
+                    textStyle = TextStyle.Default, // 添加必要的樣式
+                    singleLine = true, // 確保文本框只有一行
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text // 指定鍵盤類型為文本
+                    )
+                )
+                TextField(
+                    value = productNumberText,
+                    onValueChange = { productNumberText = it },
+                    label = { Text("型號") },
+                    modifier = Modifier.fillMaxWidth(), // 添加必要的修飾符
+                    textStyle = TextStyle.Default, // 添加必要的樣式
+                    singleLine = true, // 確保文本框只有一行
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text // 指定鍵盤類型為文本
+                    )
+                )
+                TextField(
+                    value = productBatchText,
+                    onValueChange = { productBatchText = it },
+                    label = { Text("批號") },
+                    modifier = Modifier.fillMaxWidth(), // 添加必要的修飾符
+                    textStyle = TextStyle.Default, // 添加必要的樣式
+                    singleLine = true, // 確保文本框只有一行
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text // 指定鍵盤類型為文本
+                    )
+                )
+                TextField(
+                    value = producerNameText,
+                    onValueChange = { producerNameText = it },
+                    label = { Text("製造商/進口商") },
+                    modifier = Modifier.fillMaxWidth(), // 添加必要的修飾符
+                    textStyle = TextStyle.Default, // 添加必要的樣式
+                    singleLine = true, // 確保文本框只有一行
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text // 指定鍵盤類型為文本
+                    )
+                )
+                TextField(
+                    value = bsmiNumberText,
+                    onValueChange = { bsmiNumberText = it },
+                    label = { Text("商品檢驗標識") },
+                    modifier = Modifier.fillMaxWidth(), // 添加必要的修飾符
+                    textStyle = TextStyle.Default, // 添加必要的樣式
+                    singleLine = true, // 確保文本框只有一行
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text // 指定鍵盤類型為文本
+                    )
+                )
+                TextField(
+                    value = productSourceCountryText,
+                    onValueChange = { productSourceCountryText = it },
+                    label = { Text("國家") },
+                    modifier = Modifier.fillMaxWidth(), // 添加必要的修飾符
+                    textStyle = TextStyle.Default, // 添加必要的樣式
+                    singleLine = true, // 確保文本框只有一行
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Text // 指定鍵盤類型為文本
+                    )
+                )
+
+//原文:對使用者隱藏，但會送到EXCEL
+//            Spacer(modifier = Modifier.height(16.dp))
+//            Text(
+//                text = "原文: $resultText",
+//                fontSize = 16.sp,
+//                textAlign = TextAlign.Start,
+//                modifier = Modifier.clickable {
+//                    val clipboard =
+//                        context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+//                    val clip = ClipData.newPlainText("Copied Text", resultText)
+//                    clipboard.setPrimaryClip(clip)
+//                    Toast.makeText(context, "Text Copied", Toast.LENGTH_SHORT).show()
+//                }
+//            )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = {
+
+                        sendDataToGoogleSheets()
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("提交")
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = {
+
+                        //返回文字辨識選擇器
+                        val intent = Intent(context, ChooserActivity::class.java)
+                        context.startActivity(intent)
+
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("返回上一頁")
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(
+                    onClick = {
+
+                        val intent = Intent(context, MainActivity::class.java)
+                        context.startActivity(intent)
+
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("返回首頁")
+                }
             }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) } // 添加 SnackbarHost
 
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = {
+    )
+}
 
-                    //返回文字辨識選擇器
-                    val intent = Intent(context, ChooserActivity::class.java)
-                    context.startActivity(intent)
 
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("返回")
-            }
-        }
 
-    }
 
 
 //設計文字篩選功能
+private fun extractallText(resultText: String): String {
+    return resultText ?: "Error: resultText is null"
+}
 private fun extractProductName(resultText: String): String{
     val pattern = Pattern.compile("(.*品名.*\\S)|(.*名.*\\S)|(.*系.*)|(.*玩具.*)")
     val matcher = pattern.matcher(resultText)

@@ -189,6 +189,9 @@ dependencies {
     //傳送資料至google sheet
     implementation("com.android.volley:volley:1.2.1")
 
+    //選單版面
+    implementation ("androidx.navigation:navigation-ui-ktx")
+
 }
 
 

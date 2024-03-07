@@ -35,18 +35,12 @@ class SettingsActivity : AppCompatActivity() {
         val titleResId: Int,
         val prefFragmentClass: Class<out PreferenceFragment?>
     ) {
-//        LIVE_PREVIEW(
-//            R.string.pref_screen_title_live_preview,
-//            LivePreviewPreferenceFragment::class.java
-//        ),
+
         STILL_IMAGE(
             R.string.pref_screen_title_still_image,
             StillImagePreferenceFragment::class.java
         ),
-//        CAMERAX_LIVE_PREVIEW(
-//            R.string.pref_screen_title_camerax_live_preview,
-//            CameraXLivePreviewPreferenceFragment::class.java
-//        ),
+
 //        CAMERAXSOURCE_DEMO(
 //            R.string.pref_screen_title_cameraxsource_demo,
 //            CameraXSourceDemoPreferenceFragment::class.java

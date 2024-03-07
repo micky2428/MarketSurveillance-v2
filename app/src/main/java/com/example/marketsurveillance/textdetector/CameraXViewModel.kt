@@ -1,16 +1,5 @@
 package com.example.marketsurveillance.textdetector
 
-import android.app.Application
-import android.os.Build.VERSION_CODES
-import android.util.Log
-import androidx.annotation.RequiresApi
-import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import java.util.concurrent.ExecutionException
-
 /*
  * Copyright 2020 Google LLC. All rights reserved.
  *
@@ -27,47 +16,47 @@ import java.util.concurrent.ExecutionException
  * limitations under the License.
  */
 
-
-
-/** View model for interacting with CameraX.  */
-@RequiresApi(VERSION_CODES.LOLLIPOP)
-class CameraXViewModel
-/**
- * Create an instance which interacts with the camera service via the given application context.
- */
-    (application: Application) : AndroidViewModel(application) {
-    private var cameraProviderLiveData: MutableLiveData<ProcessCameraProvider>? = null
-    val processCameraProvider: LiveData<ProcessCameraProvider>
-        get() {
-            if (cameraProviderLiveData == null) {
-                cameraProviderLiveData = MutableLiveData()
-                val cameraProviderFuture = ProcessCameraProvider.getInstance(getApplication())
-                cameraProviderFuture.addListener(
-                    {
-                        try {
-                            cameraProviderLiveData!!.setValue(cameraProviderFuture.get())
-                        } catch (e: ExecutionException) {
-                            // Handle any errors (including cancellation) here.
-                            Log.e(
-                                TAG,
-                                "Unhandled exception",
-                                e
-                            )
-                        } catch (e: InterruptedException) {
-                            Log.e(
-                                TAG,
-                                "Unhandled exception",
-                                e
-                            )
-                        }
-                    },
-                    ContextCompat.getMainExecutor(getApplication())
-                )
-            }
-            return cameraProviderLiveData!!
-        }
-
-    companion object {
-        private const val TAG = "CameraXViewModel"
-    }
-}
+//
+//
+///** View model for interacting with CameraX.  */
+//@RequiresApi(VERSION_CODES.LOLLIPOP)
+//class CameraXViewModel
+///**
+// * Create an instance which interacts with the camera service via the given application context.
+// */
+//    (application: Application) : AndroidViewModel(application) {
+//    private var cameraProviderLiveData: MutableLiveData<ProcessCameraProvider>? = null
+//    val processCameraProvider: LiveData<ProcessCameraProvider>
+//        get() {
+//            if (cameraProviderLiveData == null) {
+//                cameraProviderLiveData = MutableLiveData()
+//                val cameraProviderFuture = ProcessCameraProvider.getInstance(getApplication())
+//                cameraProviderFuture.addListener(
+//                    {
+//                        try {
+//                            cameraProviderLiveData!!.setValue(cameraProviderFuture.get())
+//                        } catch (e: ExecutionException) {
+//                            // Handle any errors (including cancellation) here.
+//                            Log.e(
+//                                TAG,
+//                                "Unhandled exception",
+//                                e
+//                            )
+//                        } catch (e: InterruptedException) {
+//                            Log.e(
+//                                TAG,
+//                                "Unhandled exception",
+//                                e
+//                            )
+//                        }
+//                    },
+//                    ContextCompat.getMainExecutor(getApplication())
+//                )
+//            }
+//            return cameraProviderLiveData!!
+//        }
+//
+//    companion object {
+//        private const val TAG = "CameraXViewModel"
+//    }
+//}

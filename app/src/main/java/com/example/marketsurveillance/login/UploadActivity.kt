@@ -1,5 +1,6 @@
 package com.example.marketsurveillance.login
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
@@ -43,12 +44,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.marketsurveillance.MainActivity
 import com.example.marketsurveillance.R
 import com.example.marketsurveillance.ui.theme.IntegrateGoogleDriveTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -199,6 +200,19 @@ class UploadActivity : ComponentActivity() {
                             Button(onClick = { viewModel.onEvent(MainEvent.SignOut) }) {
                                 Text(text = "Sign out")
                             }
+                            Spacer(modifier = Modifier.height(16.dp))
+                            androidx.compose.material.Button(
+                                onClick = {
+
+                                    val intent = Intent(context, MainActivity::class.java)
+                                    context.startActivity(intent)
+
+                                },
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
+                                androidx.compose.material.Text("返回首頁")
+                            }
+
                         }
                     }
                 }
@@ -215,7 +229,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     )
 }
 
-@Preview(showBackground = true)
+
 @Composable
 fun GreetingPreview() {
     IntegrateGoogleDriveTheme {
