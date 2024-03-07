@@ -4,8 +4,7 @@ package com.example.marketsurveillance
 //import androidx.compose.material.Checkbox 因為不合格的還是用紙本，不用勾選
 //待更新功能:打了幾筆
 //直接選擇當日日期
-//資料儲存
-//相機偵測
+
 
 //設定日期
 //等調好日期選擇器的長相再用
@@ -165,9 +164,9 @@ fun MarketCheckScreen() {
 //設定時間
         var specDate by remember { mutableStateOf(TextFieldValue()) }
         val context = LocalContext.current
-
+//部屬頁面會給url
     fun sendDataToGoogleSheets() {
-        val url = "https://script.google.com/macros/s/AKfycbwYceYMcSAecFIenliXgZRcz6DVh5VelLqJ-xLJToERr71x9DKosKd-0ke94FHxadw_Cw/exec"
+        val url = "https://script.google.com/macros/s/0000000000000/exec"
 
         val params = JSONObject().apply {
             put("source", "ProductInfo")
