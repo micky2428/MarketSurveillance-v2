@@ -211,9 +211,9 @@ fun ShowResultText(
     val scaffoldState = rememberScaffoldState()
     val snackbarHostState = scaffoldState.snackbarHostState
 
-
+//部屬頁面會給url
     fun sendDataToGoogleSheets() {
-        val url = "https://script.google.com/macros/s/AKfycbwYceYMcSAecFIenliXgZRcz6DVh5VelLqJ-xLJToERr71x9DKosKd-0ke94FHxadw_Cw/exec"
+        val url = "https://script.google.com/macros/s/000000000/exec"
 
 //        val formattedResultText = resultText.replace("\n", " ") //"\n", "\\n"無法解決原文沒有上傳sheet的問題
         val params = JSONObject().apply {
