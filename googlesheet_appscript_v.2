@@ -1,0 +1,57 @@
+//https://docs.google.com/spreadsheets/d/[your_spreadsheet_id]/edit#gid=0
+
+var sheet = SpreadsheetApp.openById("your_spreadsheet_id").getActiveSheet();
+
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+
+    var source = data.source;
+    var rowData;
+
+//data from different .kt in the same project
+
+    if (source === "ProductInfo") {
+      rowData = [
+        data.specDate,
+        data.namepicker,
+        data.productName,
+        data.productNumber,
+        data.productBatch,
+        data.producerName,
+        data.bsmiNumber,
+        data.productSourceCountry,
+        data.productSpec,
+        data.productBrand,
+        data.productDate,
+        data.producerAddress,
+        "",
+        new Date()
+        // Add more fields as needed
+      ];
+    } else if (source === "NextActivity") {
+      rowData = [
+        data.specDate,
+        data.namepicker,
+        data.productName,
+        data.productNumber,
+        data.productBatch,
+        data.producerName,
+        data.bsmiNumber,
+        data.productSourceCountry,
+        "",
+        "",
+        "",
+        "",
+        data.allwords,
+        new Date()
+        // Add more fields as needed
+      ];
+    }
+
+    sheet.appendRow(rowData);
+
+    return ContentService.createTextOutput("Success").setMimeType(ContentService.MimeType.TEXT);
+  } catch (error) {
+    console.error("Error:", error);
+    return ContentService.createTextOutput("Error").setMimeType(ContentService.MimeType.TEXT);
