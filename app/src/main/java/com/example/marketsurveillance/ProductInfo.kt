@@ -56,7 +56,7 @@ import org.json.JSONObject
 //人名選單
 //@Composable
 //fun NamePicker() {
-//    val nameOptions = listOf("李O昌", "蔡O成", "許O進", "周O瑜", "梁O婷", "潘O婷")
+//    val nameOptions = listOf("李OO", "蔡OO", "許OO", "周OO", "梁OO", "潘OO")
 //    var selectedName by remember { mutableStateOf(nameOptions[0]) }
 //    var expandedName by remember { mutableStateOf(false) }
 //    val density = LocalDensity.current
