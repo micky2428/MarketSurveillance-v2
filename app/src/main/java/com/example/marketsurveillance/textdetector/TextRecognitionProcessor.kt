@@ -180,41 +180,4 @@ class TextRecognitionProcessor(  //連動stillimageactivity
         }
     }
 }
-//class YourActivity : AppCompatActivity() { 本想設定按鍵但失敗
-//    private lateinit var yourButton: Button
-//    private lateinit var textRecognitionProcessor: TextRecognitionProcessor
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_still_image)
-//
-//        // 初始化 textRecognizerOptions，使用默认配置
-//        val textRecognizerOptions = TextRecognizerOptions.DEFAULT_OPTIONS
-//
-//        // 初始化 textRecognitionProcessor
-//        textRecognitionProcessor = TextRecognitionProcessor(this, textRecognizerOptions)
-//
-//        // 找到按钮
-//        yourButton = findViewById(R.id.yourButton)
-//
-//        // 为按钮设置点击监听器
-//        yourButton.setOnClickListener {
-//            // 在这里添加您的逻辑
-//            // 例如，启动下一个活动
-//            val intent = Intent(this, NextActivity::class.java).apply {
-//                putExtra("resultText", textRecognitionProcessor.resultText)
-//            }
-//            startActivity(intent)
-//        }
-//    }
-//}
-
-
-//這段程式碼實現了一個文字辨識處理器 TextRecognitionProcessor，用於在圖像中檢測文字。它使用了 Google ML Kit 中的文字辨識功能。
-// 讓我們來看一下主要的功能：
-//TextRecognitionProcessor 接受一個 Context 和一個 TextRecognizerOptionsInterface 的實例作為構造函數的參數， 並繼承自 VisionProcessorBase<Text>。
-//在構造函數中，它初始化了 textRecognizer，並根據應用程序中的偏好設置來設置一些參數，如是否將識別的文本分組顯示、是否顯示語言標籤、是否顯示文本置信度等。
-//detectInImage 方法用於對圖像進行文字辨識，並返回一個 Task<Text> 對象。
-//onSuccess 方法在文字辨識成功時被調用，它將檢測到的文字添加到圖形覆蓋層（GraphicOverlay）中，並在日誌中輸出一些額外的信息，以便進行測試。
-//onFailure 方法在文字辨識失敗時被調用，它在日誌中輸出相應的錯誤信息。
-//此外，還有一個名為 logExtrasForTesting 的輔助方法，用於在測試期間輸出一些額外的信息。
 
