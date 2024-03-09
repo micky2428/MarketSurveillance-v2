@@ -36,7 +36,7 @@ class AuthRepositoryImpl @Inject constructor(
     private val signInRequest = BeginSignInRequest.builder().setGoogleIdTokenRequestOptions(
         BeginSignInRequest.GoogleIdTokenRequestOptions.builder().setSupported(true)
             .setServerClientId(
-                "640178638144-q33krfljn7sb0arvi63vle2fu9higqtu.apps.googleusercontent.com" //"your web client ID from firebase
+                "00000000000000-00000000000000000000000000.apps.googleusercontent.com" //"your web client ID from firebase
             ).setFilterByAuthorizedAccounts(false).build()
     ).setAutoSelectEnabled(true).build()
 
